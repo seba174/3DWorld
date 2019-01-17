@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK;
 using OpenTK.Graphics;
+using Shaders;
 
 namespace RenderEngine
 {
@@ -14,6 +15,7 @@ namespace RenderEngine
         private Loader loader;
         private Renderer renderer;
         RawModel model;
+        StaticShader shader;
 
         float[] vertices =
         {
@@ -34,18 +36,23 @@ namespace RenderEngine
         protected override void OnLoad(EventArgs e)
         {
             float[] vertices =
-{
-            -0.5f, 0.5f, 0f,
-            -0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0f,
-            0.5f, 0.5f, 0f,
-            -0.5f, 0.5f, 0f
+            {
+                -0.5f, 0.5f, 0f,
+                -0.5f, -0.5f, 0f,
+                0.5f, -0.5f, 0f,
+                0.5f, 0.5f, 0f,
+            };
+
+            int[] indices =
+            {
+                0,1,3,
+                3,1,2
             };
 
             loader = new Loader();
             renderer = new Renderer();
-            model = loader.LoadToVAO(vertices);
+            model = loader.LoadToVAO(vertices, indices);
+            shader = new StaticShader();
         }
 
         protected override void OnResize(EventArgs e)
@@ -62,7 +69,9 @@ namespace RenderEngine
         {
             renderer.Prepare();
 
+            shader.Start();
             renderer.Render(model);
+            shader.Stop();
 
             SwapBuffers();
         }
@@ -70,6 +79,7 @@ namespace RenderEngine
         protected override void OnUnload(EventArgs e)
         {
             loader.CleanUp();
+            shader.CleanUp();
 
             base.OnUnload(e);
         }

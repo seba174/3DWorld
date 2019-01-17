@@ -11,8 +11,8 @@ namespace RenderEngine
     {
         public void Prepare()
         {
-            GL.ClearColor(1, 0, 0, 1);
             GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.ClearColor(1, 0, 0, 1);
         }
 
         public void Render(RawModel model)
@@ -20,7 +20,7 @@ namespace RenderEngine
             GL.BindVertexArray(model.VaoID);
 
             GL.EnableVertexAttribArray(0);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, model.VertexCount);
+            GL.DrawElements(BeginMode.Triangles, model.VertexCount, DrawElementsType.UnsignedInt, 0);
             GL.DisableVertexAttribArray(0);
 
             GL.BindVertexArray(0);

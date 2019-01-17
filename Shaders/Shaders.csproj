@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6B3CFA40-5A54-48EF-9956-BC17351CD910}</ProjectGuid>
+    <ProjectGuid>{FDD74173-421C-46C0-A60C-DF01D6E36097}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>RenderEngine</RootNamespace>
-    <AssemblyName>RenderEngine</AssemblyName>
+    <RootNamespace>Shaders</RootNamespace>
+    <AssemblyName>Shaders</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -36,17 +36,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="OpenTK.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
+    <Content Include="FragmentShader.c" />
+    <Content Include="VertexShader.c" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DisplayManager.cs" />
-    <Compile Include="Loader.cs" />
-    <Compile Include="RawModel.cs" />
-    <Compile Include="RendererClass.cs" />
+    <Compile Include="ShaderProgram.cs" />
+    <Compile Include="StaticShader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -54,10 +49,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Shaders\Shaders.csproj">
-      <Project>{FDD74173-421C-46C0-A60C-DF01D6E36097}</Project>
-      <Name>Shaders</Name>
-    </ProjectReference>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
