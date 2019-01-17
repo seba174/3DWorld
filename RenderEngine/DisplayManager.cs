@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK.Graphics.OpenGL4;
+using Models;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
 using Shaders;
+using Textures;
 
 namespace RenderEngine
 {
@@ -14,18 +12,10 @@ namespace RenderEngine
     {
         private Loader loader;
         private Renderer renderer;
-        RawModel model;
-        StaticShader shader;
-
-        float[] vertices =
-        {
-            -0.5f, 0.5f, 0f,
-            -0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0f,
-            0.5f, 0.5f, 0f,
-            -0.5f, 0.5f, 0f
-        };
+        private RawModel model;
+        private StaticShader shader;
+        private ModelTexture texture;
+        private TexturedModel texturedModel;
 
         public DisplayManager()
             : base(1280, 720, GraphicsMode.Default, "Chess3D", GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
@@ -49,10 +39,20 @@ namespace RenderEngine
                 3,1,2
             };
 
+            float[] textureCoords =
+            {
+                0,0,
+                0,1,
+                1,1,
+                1,0
+            };
+
             loader = new Loader();
             renderer = new Renderer();
-            model = loader.LoadToVAO(vertices, indices);
+            model = loader.LoadToVAO(vertices, textureCoords, indices);
             shader = new StaticShader();
+            texture = new ModelTexture(loader.InitTexture("image.png"));
+            texturedModel = new TexturedModel(model, texture);
         }
 
         protected override void OnResize(EventArgs e)
@@ -70,7 +70,7 @@ namespace RenderEngine
             renderer.Prepare();
 
             shader.Start();
-            renderer.Render(model);
+            renderer.Render(texturedModel);
             shader.Stop();
 
             SwapBuffers();

@@ -17,10 +17,9 @@ namespace Shaders
             programID = GL.CreateProgram();
             GL.AttachShader(programID, vertexShaderID);
             GL.AttachShader(programID, fragmentShaderID);
+            BindAttributes();
             GL.LinkProgram(programID);
             GL.ValidateProgram(programID);
-
-            BindAttributes();
         }
 
         public void Start()
