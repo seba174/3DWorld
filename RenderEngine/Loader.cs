@@ -72,7 +72,6 @@ namespace RenderEngine
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, vboID);
 
             GL.BufferData(BufferTarget.ElementArrayBuffer, buffer.Length * sizeof(int), buffer, BufferUsageHint.StaticDraw);
-
         }
 
         private void StoreDataInAttributesList(int attributeNumber, int coordinateSize, float[] data)

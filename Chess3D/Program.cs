@@ -9,7 +9,7 @@ namespace Chess3D
     {
         static void Main()
         {
-            new DisplayManager().Run(60);
+            new DisplayManager().Run(120);
         }
     }
 }
