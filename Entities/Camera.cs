@@ -13,15 +13,15 @@ namespace Entities
         {
             if (keyA)
             {
-                Position += new Vector3(-0.02f, 0, 0);
+                Position += new Vector3(-0.1f, 0, 0);
             }
             if (keyW)
             {
-                Position += new Vector3(0, 0, -0.02f);
+                Position += new Vector3(0, 0, -0.1f);
             }
             if(keyD)
             {
-                Position += new Vector3(0.02f, 0, 0);
+                Position += new Vector3(0.1f, 0, 0);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace RenderEngine
         {
             GL.Enable(EnableCap.DepthTest);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(1, 0, 0, 1);
+            GL.ClearColor(0, 0, 0, 1);
         }
 
         public void Render(Entity entity, StaticShader shader)
@@ -44,6 +44,7 @@ namespace RenderEngine
 
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
+            GL.EnableVertexAttribArray(2);
             Matrix4 transformationMatrix = Maths.CreateTransformationMatrix(entity.Position, entity.Rotation, entity.Scale);
             shader.LoadTransformationMatrix(transformationMatrix);
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -51,6 +52,7 @@ namespace RenderEngine
             GL.DrawElements(BeginMode.Triangles, model.VertexCount, DrawElementsType.UnsignedInt, 0);
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
+            GL.DisableVertexAttribArray(2);
 
             GL.BindVertexArray(0);
         }

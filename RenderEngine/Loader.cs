@@ -12,13 +12,14 @@ namespace RenderEngine
         private readonly List<int> vbos = new List<int>();
         private readonly List<int> textures = new List<int>();
 
-        public RawModel LoadToVAO(float[] positions, float[] textureCoords, int[] indicies)
+        public RawModel LoadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indicies)
         {
             int vaoID = CreateVAO();
 
             BindIndiciesBuffer(indicies);
             StoreDataInAttributesList(0, 3, positions);
             StoreDataInAttributesList(1, 2, textureCoords);
+            StoreDataInAttributesList(2, 3, normals);
             UnbindVAO();
 
             return new RawModel(vaoID, indicies.Length);

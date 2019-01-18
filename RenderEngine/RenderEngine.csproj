@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="DisplayManager.cs" />
     <Compile Include="Loader.cs" />
+    <Compile Include="OBJLoader.cs" />
     <Compile Include="RendererClass.cs" />
   </ItemGroup>
   <ItemGroup>
