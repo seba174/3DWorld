@@ -4,6 +4,7 @@ using Models;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Shaders;
+using Textures;
 using ToolBox;
 
 namespace RenderEngine
@@ -45,8 +46,13 @@ namespace RenderEngine
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
             GL.EnableVertexAttribArray(2);
+
             Matrix4 transformationMatrix = Maths.CreateTransformationMatrix(entity.Position, entity.Rotation, entity.Scale);
             shader.LoadTransformationMatrix(transformationMatrix);
+
+            ModelTexture texture = texturedModel.Texture;
+            shader.LoadShineVariables(texture.ShineDampler, texture.Reflectivity);
+
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, texturedModel.Texture.ID);
             GL.DrawElements(BeginMode.Triangles, model.VertexCount, DrawElementsType.UnsignedInt, 0);

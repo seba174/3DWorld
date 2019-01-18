@@ -15,6 +15,8 @@ namespace Shaders
         private int location_viewMatrix;
         private int location_lightPosition;
         private int location_lightColour;
+        private int location_shineDamper;
+        private int location_reflectivity;
 
         public StaticShader() : base(VertexFile, FragmentFile)
         {
@@ -34,6 +36,8 @@ namespace Shaders
             location_viewMatrix = GetUniformLocation("viewMatrix");
             location_lightPosition = GetUniformLocation("lightPosition");
             location_lightColour = GetUniformLocation("lightColour");
+            location_shineDamper = GetUniformLocation("shineDamper");
+            location_reflectivity = GetUniformLocation("reflectivity");
         }
 
         public void LoadTransformationMatrix(Matrix4 matrix)
@@ -56,6 +60,12 @@ namespace Shaders
         {
             LoadVector(location_lightColour, light.Colour);
             LoadVector(location_lightPosition, light.Position);
+        }
+
+        public void LoadShineVariables(float damper, float reflectivity)
+        {
+            LoadFloat(location_shineDamper, damper);
+            LoadFloat(location_reflectivity, reflectivity);
         }
     }
 }

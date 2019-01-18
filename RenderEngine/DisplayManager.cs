@@ -36,6 +36,10 @@ namespace RenderEngine
             renderer = new Renderer(Width, Height, shader);
             
             staticModel = new TexturedModel(model, new ModelTexture(loader.InitTexture("white.png")));
+            var texture = staticModel.Texture;
+            texture.ShineDampler = 10;
+            texture.Reflectivity = 1;
+
             entity = new Entity(staticModel, new Vector3(0, -5, -40), new Vector3(0, 0, 0), 1);
             light = new Light(new Vector3(0, 0, -20), new Vector3(1, 1, 1));
 
