@@ -5,7 +5,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
-using Shaders;
 using Textures;
 
 namespace RenderEngine
@@ -13,13 +12,12 @@ namespace RenderEngine
     public class DisplayManager : GameWindow
     {
         private Loader loader;
-        private Renderer renderer;
         private RawModel model;
-        private StaticShader shader;
         private TexturedModel staticModel;
         private Entity entity;
         private Camera camera;
         private Light light;
+        private MasterRenderer renderer;
 
         private bool keyW, keyD, keyA;
 
@@ -32,9 +30,7 @@ namespace RenderEngine
         {
             loader = new Loader();
             model = OBJLoader.LoadObjModel("dragon.obj", loader);
-            shader = new StaticShader();
-            renderer = new Renderer(Width, Height, shader);
-            
+
             staticModel = new TexturedModel(model, new ModelTexture(loader.InitTexture("white.png")));
             var texture = staticModel.Texture;
             texture.ShineDampler = 10;
@@ -42,6 +38,7 @@ namespace RenderEngine
 
             entity = new Entity(staticModel, new Vector3(0, -5, -40), new Vector3(0, 0, 0), 1);
             light = new Light(new Vector3(0, 0, -20), new Vector3(1, 1, 1));
+            renderer = new MasterRenderer(Height, Width);
 
             camera = new Camera();
         }
@@ -71,23 +68,18 @@ namespace RenderEngine
         {
             entity.Rotation += new Vector3(0, 1, 0);
             camera.Move(keyW, keyD, keyA);
-            renderer.Prepare();
 
-            shader.Start();
+            renderer.ProcessEntity(entity);
 
-            shader.LoadLight(light);
-            shader.LoadViewMatrix(camera);
-            renderer.Render(entity, shader);
-
-            shader.Stop();
+            renderer.Render(light, camera);
 
             SwapBuffers();
         }
 
         protected override void OnUnload(EventArgs e)
         {
+            renderer.CleanUp();
             loader.CleanUp();
-            shader.CleanUp();
 
             base.OnUnload(e);
         }

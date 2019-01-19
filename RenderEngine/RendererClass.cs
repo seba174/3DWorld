@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Entities;
 using Models;
 using OpenTK;
@@ -18,9 +19,14 @@ namespace RenderEngine
         private int width;
         private int height;
         private Matrix4 projectionMatrix;
+        private StaticShader shader;
 
         public Renderer(int displayWidth, int displayHeight, StaticShader shader)
         {
+            this.shader = shader;
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+
             width = displayWidth;
             height = displayHeight;
             CreateProjectionMatrix();
@@ -37,9 +43,22 @@ namespace RenderEngine
             GL.ClearColor(0, 0, 0, 1);
         }
 
-        public void Render(Entity entity, StaticShader shader)
+        public void Render(Dictionary<TexturedModel, List<Entity>> entities)
         {
-            TexturedModel texturedModel = entity.Model;
+            foreach (var model in entities)
+            {
+                PrepareTexturedModel(model.Key);
+                foreach (var entity in model.Value)
+                {
+                    PrepareInstance(entity);
+                    GL.DrawElements(BeginMode.Triangles, model.Key.RawModel.VertexCount, DrawElementsType.UnsignedInt, 0);
+                }
+                UnbindTexturedModel();
+            }
+        }
+
+        private void PrepareTexturedModel(TexturedModel texturedModel)
+        {
             RawModel model = texturedModel.RawModel;
             GL.BindVertexArray(model.VaoID);
 
@@ -47,20 +66,27 @@ namespace RenderEngine
             GL.EnableVertexAttribArray(1);
             GL.EnableVertexAttribArray(2);
 
-            Matrix4 transformationMatrix = Maths.CreateTransformationMatrix(entity.Position, entity.Rotation, entity.Scale);
-            shader.LoadTransformationMatrix(transformationMatrix);
-
             ModelTexture texture = texturedModel.Texture;
             shader.LoadShineVariables(texture.ShineDampler, texture.Reflectivity);
 
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, texturedModel.Texture.ID);
-            GL.DrawElements(BeginMode.Triangles, model.VertexCount, DrawElementsType.UnsignedInt, 0);
+
+        }
+
+        private void UnbindTexturedModel()
+        {
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
             GL.DisableVertexAttribArray(2);
 
             GL.BindVertexArray(0);
+        }
+
+        private void PrepareInstance(Entity entity)
+        {
+            Matrix4 transformationMatrix = Maths.CreateTransformationMatrix(entity.Position, entity.Rotation, entity.Scale);
+            shader.LoadTransformationMatrix(transformationMatrix);
         }
 
         private void CreateProjectionMatrix()
