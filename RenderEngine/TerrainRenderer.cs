@@ -17,6 +17,7 @@ namespace RenderEngine
             this.shader = shader;
             shader.Start();
             shader.LoadProjectionMatrix(projectionMatrix);
+            shader.ConnectTextureUnits();
             shader.Stop();
         }
 
@@ -42,11 +43,29 @@ namespace RenderEngine
             GL.EnableVertexAttribArray(1);
             GL.EnableVertexAttribArray(2);
 
-            ModelTexture texture = terrain.Texture;
-            shader.LoadShineVariables(texture.ShineDampler, texture.Reflectivity);
+            BindTextures(terrain);
+
+            shader.LoadShineVariables(1, 0);
+        }
+
+        private void BindTextures(Terrain terrain)
+        {
+            TerrainTexturePack texturePack = terrain.TexturePack;
 
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, texture.ID);
+            GL.BindTexture(TextureTarget.Texture2D, texturePack.BackgroundTexture.ID);
+
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, texturePack.RTexture.ID);
+
+            GL.ActiveTexture(TextureUnit.Texture2);
+            GL.BindTexture(TextureTarget.Texture2D, texturePack.GTexture.ID);
+
+            GL.ActiveTexture(TextureUnit.Texture3);
+            GL.BindTexture(TextureTarget.Texture2D, texturePack.BTexture.ID);
+
+            GL.ActiveTexture(TextureUnit.Texture4);
+            GL.BindTexture(TextureTarget.Texture2D, terrain.BlendMap.ID);
         }
 
         private void UnbindTexturedModel()

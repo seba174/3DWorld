@@ -68,6 +68,11 @@ namespace Shaders
             GL.Uniform1(location, value);
         }
 
+        protected void LoadInt(int location, int value)
+        {
+            GL.Uniform1(location, value);
+        }
+
         protected void LoadVector(int location, Vector3 vector)
         {
             GL.Uniform3(location, vector);

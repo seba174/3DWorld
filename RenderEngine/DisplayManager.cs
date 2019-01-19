@@ -33,6 +33,13 @@ namespace RenderEngine
         {
             loader = new Loader();
 
+            TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy.png"));
+            TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud.png"));
+            TerrainTexture gTexture = new TerrainTexture(loader.InitTexture("grassFlowers.png"));
+            TerrainTexture bTexture = new TerrainTexture(loader.InitTexture("path.png"));
+            TerrainTexture blendMap = new TerrainTexture(loader.InitTexture("blendMap.png"));
+            TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+
             //TexturedModel chessBoard = new TexturedModel(loader.LoadToVAO("boardWork"), new ModelTexture(loader.InitTexture("TableroDiffuse01.png")));
 
             TexturedModel tree = new TexturedModel(loader.LoadToVAO("tree"), new ModelTexture(loader.InitTexture("tree.png")));
@@ -53,7 +60,7 @@ namespace RenderEngine
 
             for (int i = 0; i < 500; i++)
             {
-                //entities.Add(new Entity(chessBoard, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                //entities.Add(new Entity(chessBoard, new Vector3((float)rdn.NextDouble() * 800 - 400, 5, (float)rdn.NextDouble() * -600),
                 //    new Vector3(180, 0, 0), 3));
                 entities.Add(new Entity(tree, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
                     new Vector3(0, 0, 0), 3));
@@ -65,15 +72,13 @@ namespace RenderEngine
 
             light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
 
-            terrain = new Terrain(0, 0, loader, new ModelTexture(loader.InitTexture("grass.png")));
-            terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.InitTexture("grass.png")));
-
+            terrain = new Terrain(0, 0, loader, texturePack, blendMap);
+            terrain2 = new Terrain(1, 0, loader, texturePack, blendMap);
 
             renderer = new MasterRenderer(Height, Width);
 
             camera = new Camera();
         }
-
 
         protected override void OnResize(EventArgs e)
         {

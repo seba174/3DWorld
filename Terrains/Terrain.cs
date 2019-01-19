@@ -12,11 +12,15 @@ namespace Terrains
         public float X { get; private set; }
         public float Z { get; private set; }
         public RawModel Model { get; private set; }
-        public ModelTexture Texture { get; private set; }
 
-        public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture)
+        public TerrainTexturePack TexturePack { get; private set; }
+        public TerrainTexture BlendMap { get; }
+
+        public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap)
         {
-            Texture = texture;
+            TexturePack = texturePack;
+            BlendMap = blendMap;
+
             X = gridX * Size;
             Z = gridZ * Size;
             Model = GenerateTerrain(loader);
