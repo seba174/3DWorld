@@ -20,6 +20,7 @@ namespace RenderEngine
         private Light light;
         private Terrain terrain, terrain2;
         private MasterRenderer renderer;
+        private Entity ent;
 
         private bool keyW, keyD, keyA;
 
@@ -32,6 +33,10 @@ namespace RenderEngine
         protected override void OnLoad(EventArgs e)
         {
             loader = new Loader();
+
+            var staticA = new TexturedModel(loader.LoadToVAO("boardWork"), new ModelTexture(loader.InitTexture("TableroDiffuse01.png")));
+            ent = new Entity(staticA, new Vector3(100, 0, -300), new Vector3(0, 0, 0), 3);
+
 
             TexturedModel staticModel = new TexturedModel(loader.LoadToVAO("tree"), new ModelTexture(loader.InitTexture("tree.png")));
             TexturedModel grass = new TexturedModel(loader.LoadToVAO("grassModel"), new ModelTexture(loader.InitTexture("grassTexture.png")));
@@ -51,12 +56,14 @@ namespace RenderEngine
 
             for (int i = 0; i < 500; i++)
             {
-                entities.Add(new Entity(staticModel, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                    new Vector3(0, 0, 0), 3));
-                entities.Add(new Entity(grass, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                    new Vector3(0, 0, 0), 1));
-                entities.Add(new Entity(fern, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                    new Vector3(0, 0, 0), 0.6f));
+                entities.Add(new Entity(staticA, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                    new Vector3(180, 0, 0), 3));
+                //entities.Add(new Entity(staticModel, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                //    new Vector3(0, 0, 0), 3));
+                //entities.Add(new Entity(grass, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                //    new Vector3(0, 0, 0), 1));
+                //entities.Add(new Entity(fern, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                //    new Vector3(0, 0, 0), 0.6f));
             }
 
             light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
@@ -98,6 +105,7 @@ namespace RenderEngine
             renderer.ProcessTerrain(terrain);
             renderer.ProcessTerrain(terrain2);
 
+            renderer.ProcessEntity(ent);
             foreach (var entity in entities)
             {
                 renderer.ProcessEntity(entity);
