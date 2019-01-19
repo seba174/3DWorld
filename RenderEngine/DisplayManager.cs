@@ -20,7 +20,6 @@ namespace RenderEngine
         private Light light;
         private Terrain terrain, terrain2;
         private MasterRenderer renderer;
-        private Entity ent;
 
         private bool keyW, keyD, keyA;
 
@@ -34,11 +33,9 @@ namespace RenderEngine
         {
             loader = new Loader();
 
-            var staticA = new TexturedModel(loader.LoadToVAO("boardWork"), new ModelTexture(loader.InitTexture("TableroDiffuse01.png")));
-            ent = new Entity(staticA, new Vector3(100, 0, -300), new Vector3(0, 0, 0), 3);
+            //TexturedModel chessBoard = new TexturedModel(loader.LoadToVAO("boardWork"), new ModelTexture(loader.InitTexture("TableroDiffuse01.png")));
 
-
-            TexturedModel staticModel = new TexturedModel(loader.LoadToVAO("tree"), new ModelTexture(loader.InitTexture("tree.png")));
+            TexturedModel tree = new TexturedModel(loader.LoadToVAO("tree"), new ModelTexture(loader.InitTexture("tree.png")));
             TexturedModel grass = new TexturedModel(loader.LoadToVAO("grassModel"), new ModelTexture(loader.InitTexture("grassTexture.png")));
             TexturedModel fern = new TexturedModel(loader.LoadToVAO("fern"), new ModelTexture(loader.InitTexture("fern.png")));
 
@@ -48,22 +45,22 @@ namespace RenderEngine
             grass.Texture.UseFakeLightning = true;
             fern.Texture.UseFakeLightning = true;
 
-            staticModel.Texture.ShineDampler = 10;
-            staticModel.Texture.Reflectivity = 1;
+            tree.Texture.ShineDampler = 10;
+            tree.Texture.Reflectivity = 1;
 
             Random rdn = new Random();
             entities = new List<Entity>();
 
             for (int i = 0; i < 500; i++)
             {
-                entities.Add(new Entity(staticA, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                    new Vector3(180, 0, 0), 3));
-                //entities.Add(new Entity(staticModel, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                //    new Vector3(0, 0, 0), 3));
-                //entities.Add(new Entity(grass, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                //    new Vector3(0, 0, 0), 1));
-                //entities.Add(new Entity(fern, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                //    new Vector3(0, 0, 0), 0.6f));
+                //entities.Add(new Entity(chessBoard, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                //    new Vector3(180, 0, 0), 3));
+                entities.Add(new Entity(tree, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                    new Vector3(0, 0, 0), 3));
+                entities.Add(new Entity(grass, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                    new Vector3(0, 0, 0), 1));
+                entities.Add(new Entity(fern, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
+                    new Vector3(0, 0, 0), 0.6f));
             }
 
             light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
@@ -105,7 +102,6 @@ namespace RenderEngine
             renderer.ProcessTerrain(terrain);
             renderer.ProcessTerrain(terrain2);
 
-            renderer.ProcessEntity(ent);
             foreach (var entity in entities)
             {
                 renderer.ProcessEntity(entity);
