@@ -34,9 +34,9 @@ namespace Terrains
             {
                 for (int j = 0; j < VertexCount; j++)
                 {
-                    vertices[vertexPointer * 3] = j / ((float)VertexCount - 1) * Size - 500;
+                    vertices[vertexPointer * 3] = j / ((float)VertexCount - 1) * Size - 600;
                     vertices[vertexPointer * 3 + 1] = 0;
-                    vertices[vertexPointer * 3 + 2] = i / ((float)VertexCount - 1) * Size - 500;
+                    vertices[vertexPointer * 3 + 2] = i / ((float)VertexCount - 1) * Size - 600;
                     normals[vertexPointer * 3] = 0;
                     normals[vertexPointer * 3 + 1] = 1;
                     normals[vertexPointer * 3 + 2] = 0;

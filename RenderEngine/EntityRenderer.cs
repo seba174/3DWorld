@@ -47,6 +47,11 @@ namespace RenderEngine
             GL.EnableVertexAttribArray(2);
 
             ModelTexture texture = texturedModel.Texture;
+            if (texture.HasTransparency)
+            {
+                MasterRenderer.DisableCulling();
+            }
+            shader.LoadFakeLightingVariable(texture.UseFakeLightning);
             shader.LoadShineVariables(texture.ShineDampler, texture.Reflectivity);
 
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -56,6 +61,8 @@ namespace RenderEngine
 
         private void UnbindTexturedModel()
         {
+            MasterRenderer.EnableCulling();
+
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
             GL.DisableVertexAttribArray(2);

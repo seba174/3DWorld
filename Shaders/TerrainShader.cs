@@ -21,6 +21,7 @@ namespace Shaders
         private int location_lightColour;
         private int location_shineDamper;
         private int location_reflectivity;
+        private int location_skyColour;
 
         public TerrainShader() : base(VertexFile, FragmentFile)
         {
@@ -42,6 +43,12 @@ namespace Shaders
             location_lightColour = GetUniformLocation("lightColour");
             location_shineDamper = GetUniformLocation("shineDamper");
             location_reflectivity = GetUniformLocation("reflectivity");
+            location_skyColour = GetUniformLocation("skyColour");
+        }
+
+        public void LoadSkyColour(Vector3 color)
+        {
+            LoadVector(location_skyColour, color);
         }
 
         public void LoadTransformationMatrix(Matrix4 matrix)

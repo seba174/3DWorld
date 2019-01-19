@@ -16,6 +16,8 @@ namespace Shaders
         private int location_lightColour;
         private int location_shineDamper;
         private int location_reflectivity;
+        private int location_useFakeLighting;
+        private int location_skyColour;
 
         public StaticShader() : base(VertexFile, FragmentFile)
         {
@@ -37,6 +39,18 @@ namespace Shaders
             location_lightColour = GetUniformLocation("lightColour");
             location_shineDamper = GetUniformLocation("shineDamper");
             location_reflectivity = GetUniformLocation("reflectivity");
+            location_useFakeLighting = GetUniformLocation("useFakeLighting");
+            location_skyColour = GetUniformLocation("skyColour");
+        }
+
+        public void LoadSkyColour(Vector3 color)
+        {
+            LoadVector(location_skyColour, color);
+        }
+
+        public void LoadFakeLightingVariable(bool useFakeLighting)
+        {
+            LoadBoolean(location_useFakeLighting, useFakeLighting);
         }
 
         public void LoadTransformationMatrix(Matrix4 matrix)

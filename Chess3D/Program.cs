@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using OpenTK.Graphics.OpenGL4;
 using RenderEngine;
 
 namespace Chess3D
 {
-    static class Program
+    internal static class Program
     {
-        static void Main()
+        private static void Main()
         {
             new DisplayManager().Run(120);
         }

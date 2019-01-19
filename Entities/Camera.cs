@@ -4,8 +4,8 @@ namespace Entities
 {
     public class Camera
     {
-        public Vector3 Position { get; private set; } = new Vector3(0, 5, 0);
-        public float Pitch { get; } = 10;
+        public Vector3 Position { get; private set; } = new Vector3(0, 7, 0);
+        public float Pitch { get; } = 0;
         public float Yaw { get; } = 0;
         public float Roll { get; } = 0;
 

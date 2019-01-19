@@ -9,6 +9,8 @@ namespace RenderEngine
     public class OBJLoader
     {
         private const string baseObjPath = "../../../Resources/";
+        private const string type = ".obj";
+
         public static RawModel LoadObjModel(string fileName, Loader loader)
         {
             var vertices = new List<Vector3>();
@@ -19,7 +21,7 @@ namespace RenderEngine
             float[] texturesArray = null, normalsArray = null, verticesArray = null;
             int[] indicesArray = null;
 
-            using (var fr = new StreamReader(baseObjPath + fileName))
+            using (var fr = new StreamReader(baseObjPath + fileName + type))
             {
                 string line = null;
 

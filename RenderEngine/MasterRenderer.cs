@@ -14,6 +14,7 @@ namespace RenderEngine
         private const float FOV = 70;
         private const float NEAR_PLANE = 0.1f;
         private const float FAR_PLANE = 1000;
+        private static Vector3 SkyColour = new Vector3(0.5f, 0.5f, 0.5f);
 
         private int height, width;
 
@@ -32,8 +33,7 @@ namespace RenderEngine
             this.height = height;
             this.width = width;
 
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
+            EnableCulling();
 
             shader = new StaticShader();
             terrainShader = new TerrainShader();
@@ -49,12 +49,14 @@ namespace RenderEngine
             Prepare();
 
             shader.Start();
+            shader.LoadSkyColour(SkyColour);
             shader.LoadLight(sun);
             shader.LoadViewMatrix(camera);
             renderer.Render(entities);
             shader.Stop();
 
             terrainShader.Start();
+            shader.LoadSkyColour(SkyColour);
             terrainShader.LoadLight(sun);
             terrainShader.LoadViewMatrix(camera);
             terrainRenderer.Render(terrains);
@@ -79,6 +81,17 @@ namespace RenderEngine
             }
         }
 
+        public static void EnableCulling()
+        {
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+        }
+
+        public static void DisableCulling()
+        {
+            GL.Disable(EnableCap.CullFace);
+        }
+
         public void ProcessTerrain(Terrain terrain)
         {
             terrains.Add(terrain);
@@ -88,7 +101,7 @@ namespace RenderEngine
         {
             GL.Enable(EnableCap.DepthTest);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(0.49f, 89f, 0.98f, 1);
+            GL.ClearColor(SkyColour.X, SkyColour.Y, SkyColour.Z, 1);
         }
 
         public void CleanUp()
