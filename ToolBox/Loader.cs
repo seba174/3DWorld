@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using OpenTK.Graphics.OpenGL4;
+using RenderEngine;
 
-
-namespace RenderEngine
+namespace ToolBox
 {
     public class Loader
     {

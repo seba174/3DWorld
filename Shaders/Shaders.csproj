@@ -36,12 +36,15 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="FragmentShader.c" />
-    <Content Include="VertexShader.c" />
+    <None Include="FragmentShader.glsl" />
+    <None Include="TerrainFragmentShader.glsl" />
+    <None Include="TerrainVertexShader.glsl" />
+    <None Include="VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ShaderProgram.cs" />
     <Compile Include="StaticShader.cs" />
+    <Compile Include="TerrainShader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">

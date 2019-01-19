@@ -7,8 +7,8 @@
 
         public RawModel(int vaoID, int vertexCount)
         {
-            this.VaoID = vaoID;
-            this.VertexCount = vertexCount;
+            VaoID = vaoID;
+            VertexCount = vertexCount;
         }
     }
 }

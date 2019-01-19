@@ -5,7 +5,9 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
+using Terrains;
 using Textures;
+using ToolBox;
 
 namespace RenderEngine
 {
@@ -17,6 +19,7 @@ namespace RenderEngine
         private Entity entity;
         private Camera camera;
         private Light light;
+        private Terrain terrain, terrain2;
         private MasterRenderer renderer;
 
         private bool keyW, keyD, keyA;
@@ -29,15 +32,20 @@ namespace RenderEngine
         protected override void OnLoad(EventArgs e)
         {
             loader = new Loader();
-            model = OBJLoader.LoadObjModel("dragon.obj", loader);
+            model = OBJLoader.LoadObjModel("tree.obj", loader);
 
-            staticModel = new TexturedModel(model, new ModelTexture(loader.InitTexture("white.png")));
+            staticModel = new TexturedModel(model, new ModelTexture(loader.InitTexture("tree.png")));
             var texture = staticModel.Texture;
             texture.ShineDampler = 10;
             texture.Reflectivity = 1;
 
-            entity = new Entity(staticModel, new Vector3(0, -5, -40), new Vector3(0, 0, 0), 1);
-            light = new Light(new Vector3(0, 0, -20), new Vector3(1, 1, 1));
+            entity = new Entity(staticModel, new Vector3(0, 0, -25), new Vector3(0, 0, 0), 1);
+            light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
+
+            terrain = new Terrain(0, 0, loader, new ModelTexture(loader.InitTexture("grass.png")));
+            terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.InitTexture("grass.png")));
+
+
             renderer = new MasterRenderer(Height, Width);
 
             camera = new Camera();
@@ -69,6 +77,8 @@ namespace RenderEngine
             entity.Rotation += new Vector3(0, 1, 0);
             camera.Move(keyW, keyD, keyA);
 
+            renderer.ProcessTerrain(terrain);
+            renderer.ProcessTerrain(terrain2);
             renderer.ProcessEntity(entity);
 
             renderer.Render(light, camera);

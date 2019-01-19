@@ -7,6 +7,7 @@ namespace Shaders
 {
     public abstract class ShaderProgram
     {
+        protected const string basePath = "../../../Shaders/";
         private readonly int programID;
         private readonly int vertexShaderID;
         private readonly int fragmentShaderID;

@@ -43,10 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DisplayManager.cs" />
-    <Compile Include="Loader.cs" />
     <Compile Include="MasterRenderer.cs" />
     <Compile Include="OBJLoader.cs" />
-    <Compile Include="RendererClass.cs" />
+    <Compile Include="EntityRenderer.cs" />
+    <Compile Include="TerrainRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -66,6 +66,10 @@
     <ProjectReference Include="..\Shaders\Shaders.csproj">
       <Project>{FDD74173-421C-46C0-A60C-DF01D6E36097}</Project>
       <Name>Shaders</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Terrains\Terrains.csproj">
+      <Project>{F1216F6C-59D0-4063-8063-52ECD4A8DE39}</Project>
+      <Name>Terrains</Name>
     </ProjectReference>
     <ProjectReference Include="..\Textures\Textures.csproj">
       <Project>{3D5FC2B7-9C35-4C9B-9EA0-DC33F0C7521B}</Project>

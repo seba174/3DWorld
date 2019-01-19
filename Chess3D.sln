@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBox", "ToolBox\ToolBox.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{E586903D-5E3F-4A07-8A5E-57F306F712AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terrains", "Terrains\Terrains.csproj", "{F1216F6C-59D0-4063-8063-52ECD4A8DE39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{E586903D-5E3F-4A07-8A5E-57F306F712AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E586903D-5E3F-4A07-8A5E-57F306F712AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E586903D-5E3F-4A07-8A5E-57F306F712AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1216F6C-59D0-4063-8063-52ECD4A8DE39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1216F6C-59D0-4063-8063-52ECD4A8DE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1216F6C-59D0-4063-8063-52ECD4A8DE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1216F6C-59D0-4063-8063-52ECD4A8DE39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

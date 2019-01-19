@@ -1,13 +1,18 @@
-﻿using Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Entities;
 using OpenTK;
 using ToolBox;
 
 namespace Shaders
 {
-    public class StaticShader : ShaderProgram
+    public class TerrainShader : ShaderProgram
     {
-        private static string VertexFile = basePath + "VertexShader.glsl";
-        private static string FragmentFile = basePath + "FragmentShader.glsl";
+        private static string VertexFile = basePath + "TerrainVertexShader.glsl";
+        private static string FragmentFile = basePath + "TerrainFragmentShader.glsl";
 
         private int location_transformationMatrix;
         private int location_projectionMatrix;
@@ -17,7 +22,7 @@ namespace Shaders
         private int location_shineDamper;
         private int location_reflectivity;
 
-        public StaticShader() : base(VertexFile, FragmentFile)
+        public TerrainShader() : base(VertexFile, FragmentFile)
         {
         }
 
@@ -30,7 +35,7 @@ namespace Shaders
 
         protected override void GetAllUniformLocations()
         {
-            location_transformationMatrix =  GetUniformLocation("transformationMatrix");
+            location_transformationMatrix = GetUniformLocation("transformationMatrix");
             location_projectionMatrix = GetUniformLocation("projectionMatrix");
             location_viewMatrix = GetUniformLocation("viewMatrix");
             location_lightPosition = GetUniformLocation("lightPosition");
