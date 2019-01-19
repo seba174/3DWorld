@@ -12,6 +12,12 @@ namespace ToolBox
         private readonly List<int> vbos = new List<int>();
         private readonly List<int> textures = new List<int>();
 
+        public RawModel LoadToVAO(string objFileName)
+        {
+            ModelData data = OBJLoader.LoadObjModel(objFileName);
+            return LoadToVAO(data.Vertices, data.TextureCoordinates, data.Normals, data.Indices);
+        }
+
         public RawModel LoadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indicies)
         {
             int vaoID = CreateVAO();

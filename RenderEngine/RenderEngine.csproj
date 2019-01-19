@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="DisplayManager.cs" />
     <Compile Include="MasterRenderer.cs" />
-    <Compile Include="OBJLoader.cs" />
     <Compile Include="EntityRenderer.cs" />
     <Compile Include="TerrainRenderer.cs" />
   </ItemGroup>

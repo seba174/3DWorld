@@ -15,7 +15,6 @@ namespace RenderEngine
     public class DisplayManager : GameWindow
     {
         private Loader loader;
-        private TexturedModel staticModel, grass, fern;
         private List<Entity> entities;
         private Camera camera;
         private Light light;
@@ -34,9 +33,9 @@ namespace RenderEngine
         {
             loader = new Loader();
 
-            staticModel = new TexturedModel(OBJLoader.LoadObjModel("tree", loader), new ModelTexture(loader.InitTexture("tree.png")));
-            grass = new TexturedModel(OBJLoader.LoadObjModel("grassModel", loader), new ModelTexture(loader.InitTexture("grassTexture.png")));
-            fern = new TexturedModel(OBJLoader.LoadObjModel("fern", loader), new ModelTexture(loader.InitTexture("fern.png")));
+            TexturedModel staticModel = new TexturedModel(loader.LoadToVAO("tree"), new ModelTexture(loader.InitTexture("tree.png")));
+            TexturedModel grass = new TexturedModel(loader.LoadToVAO("grassModel"), new ModelTexture(loader.InitTexture("grassTexture.png")));
+            TexturedModel fern = new TexturedModel(loader.LoadToVAO("fern"), new ModelTexture(loader.InitTexture("fern.png")));
 
             grass.Texture.HasTransparency = true;
             fern.Texture.HasTransparency = true;
