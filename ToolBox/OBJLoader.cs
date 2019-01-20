@@ -23,6 +23,12 @@ namespace ToolBox
 
                 while (!fr.EndOfStream)
                 {
+                    int nextCharacter = fr.Peek();
+                    if (nextCharacter == 'f')
+                    {
+                        break;
+                    }
+
                     line = fr.ReadLine();
                     var splitedCurrentLine = line.Split(' ');
                     if (line.StartsWith("v "))
@@ -44,14 +50,11 @@ namespace ToolBox
                             float.Parse(splitedCurrentLine[2]), float.Parse(splitedCurrentLine[3]));
                         normals.Add(normal);
                     }
-                    else if (line.StartsWith("f "))
-                    {
-                        break;
-                    }
                 }
 
                 while (!fr.EndOfStream)
                 {
+                    line = fr.ReadLine();
                     if (!line.StartsWith("f "))
                     {
                         line = fr.ReadLine();
@@ -64,10 +67,9 @@ namespace ToolBox
                         string[] vertex = splittedCurrentLine[i].Split('/');
                         ProcessVertex(vertex, vertices, indices);
                     }
-
-                    line = fr.ReadLine();
                 }
             }
+
 
             RemoveUnusedVertices(vertices);
 

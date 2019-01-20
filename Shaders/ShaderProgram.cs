@@ -7,7 +7,6 @@ namespace Shaders
 {
     public abstract class ShaderProgram
     {
-        protected const int MaxLights = 4;
         protected const string basePath = "../../../Shaders/";
 
         private readonly int programID;

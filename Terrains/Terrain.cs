@@ -11,7 +11,7 @@ namespace Terrains
     {
         private const string baseResourcesPath = "../../../Resources/";
         private const float Size = 800;
-        private const float MaxHeight = 50;
+        private const float MaxHeight = 40;
 
         public float X { get; private set; }
         public float Z { get; private set; }

@@ -1,8 +1,9 @@
 ﻿#version 450 core
+#define NR_POINT_LIGHTS 11
 
 in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
-in vec3 toLightVector[4];
+in vec3 toLightVector[NR_POINT_LIGHTS];
 in vec3 toCameraVector;
 in float visibility;
 
@@ -14,7 +15,8 @@ uniform sampler2D gTexture;
 uniform sampler2D bTexture;
 uniform sampler2D blendMap;
 
-uniform vec3 lightColour[4];
+uniform vec3 lightColour[NR_POINT_LIGHTS];
+uniform vec3 attenuation[NR_POINT_LIGHTS];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
@@ -37,8 +39,11 @@ void main(void) {
 	vec3 totalDiffuse = vec3(0.0);
 	vec3 totalSpecular = vec3(0.0);
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < NR_POINT_LIGHTS; i++)
 	{
+		float distance = length(toLightVector[i]);
+		float attenuationFactor = attenuation[i].x + attenuation[i].y * distance + attenuation[i].z * distance * distance;
+
 		vec3 unitLightVector = normalize(toLightVector[i]);
 		float nDot1 = dot(unitNormal, unitLightVector);
 		float brightness = max(nDot1, 0.0);
@@ -48,8 +53,8 @@ void main(void) {
 		specularFactor = max(specularFactor, 0.0);
 		float dampedFactor = pow(specularFactor, shineDamper);
 
-		totalDiffuse = totalDiffuse + brightness * lightColour[i];
-		totalSpecular = totalSpecular + dampedFactor * reflectivity * lightColour[i];
+		totalDiffuse = totalDiffuse + (brightness * lightColour[i]) / attenuationFactor;
+		totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColour[i]) / attenuationFactor;
 	}
 
 	totalDiffuse = max(totalDiffuse, 0.15);

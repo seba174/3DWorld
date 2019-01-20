@@ -51,6 +51,7 @@ namespace RenderEngine
             TexturedModel tree = loader.CreateTexturedModel("tree", "tree.png");
             TexturedModel fernTextureAtlas = loader.CreateTexturedModel("fern", "fern.png", 2);
             TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture.png");
+            TexturedModel lamp = loader.CreateTexturedModel("lamp", "lamp.png");
 
             fernTextureAtlas.Texture.HasTransparency = true;
             fernTextureAtlas.Texture.UseFakeLightning = true;
@@ -67,28 +68,30 @@ namespace RenderEngine
             Random rdn = new Random();
             entities = new List<Entity>();
 
-            for (int i = 0; i < 1200; i++)
+            lights = new List<Light>()
+            {
+                new Light(new Vector3(0, 2000, 2000), new Vector3(1f, 1f, 1f)),
+            };
+
+            for (int i = 0; i < 1000; i++)
             {
                 float x = (float)rdn.NextDouble() * 800 - 400;
                 float z = (float)rdn.NextDouble() * -600;
                 float y = terrains.Where(t => t.IsOnTerrain(new Vector3(x, 0, z))).FirstOrDefault()?.GetHeight(x, z) ?? 0;
 
-                if (i % 2 == 0)
+                if (i % 100 == 0)
+                {
+                    CreateLamp(new Vector3(x, y, z), new Vector3(3.5f, 2, 2), lamp);
+                }
+                else if(i % 2 == 0)
                 {
                     entities.Add(new Entity(tree, new Vector3(x, y, z), new Vector3(0, 0, 0), 3));
                 }
                 else
                 {
                     entities.Add(new Entity(fernTextureAtlas, rdn.Next() % 4, new Vector3(x, y, z), new Vector3(0, 0, 0), 0.6f));
-                }
+                }           
             }
-
-            lights = new List<Light>()
-            {
-                new Light(new Vector3(0, 2000, 2000), new Vector3(1, 1, 1)),
-                //new Light(new Vector3(-200, 10, -200), new Vector3(10,0,0)),
-                //new Light(new Vector3(200,10,200), new Vector3(0,0,10))
-            };
 
             player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 180, 0), 0.5f);
 
@@ -96,6 +99,25 @@ namespace RenderEngine
             camera = new ThirdPersonCamera(keyboard, mouse, player);
 
             stopwatch.Start();
+        }
+
+        private void CreateLamp(Vector3 position, Vector3 lightCoulour, TexturedModel lampModel)
+        {
+            float scale = 1.0f;
+            float lightSourceHeightFactor = 0.97f;
+            Vector3 lampAttenuation = new Vector3(1, 0.01f, 0.002f);
+
+            lampModel.Texture.UseFakeLightning = true;
+            //lampModel.Texture.HasTransparency = true;
+
+            Entity lamp = new Entity(lampModel, position, new Vector3(0, 0, 0), scale);
+
+            float lightSourceHeight = position.Y + lightSourceHeightFactor * lamp.Height * scale;
+            Light lampLight = new Light(new Vector3(position.X, lightSourceHeight, position.Z),
+                lightCoulour, lampAttenuation);
+
+            entities.Add(lamp);
+            lights.Add(lampLight);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
