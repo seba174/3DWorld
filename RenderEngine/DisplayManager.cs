@@ -81,8 +81,8 @@ namespace RenderEngine
             camera = new Camera(keyboard, mouse);
             light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
             
-            terrain = new Terrain(0, 0, loader, texturePack, blendMap);
-            terrain2 = new Terrain(1, 0, loader, texturePack, blendMap);
+            terrain = new Terrain(0, 0, loader, texturePack, blendMap, "heightMap.png");
+            terrain2 = new Terrain(1, 0, loader, texturePack, blendMap, "heightMap.png");
 
             player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 0, 0), 0.5f);
 

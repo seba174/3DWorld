@@ -117,10 +117,10 @@ namespace ToolBox
         {
             (float[] texture, int width, int height) result;
 
-            using (var bmp = (Bitmap)Image.FromFile(baseTexturePath + fileName))
+            using (var fastBitmap = FastBitmapExtensions.GetLockedFastBitmap(baseTexturePath + fileName))
             {
-                result.width = bmp.Width;
-                result.height = bmp.Height;
+                result.width = fastBitmap.Width;
+                result.height = fastBitmap.Height;
                 result.texture = new float[result.width * result.height * sizeof(float)];
 
                 int index = 0;
@@ -128,7 +128,7 @@ namespace ToolBox
                 {
                     for (int x = 0; x < result.width; x++)
                     {
-                        var pixel = bmp.GetPixel(x, y);
+                        var pixel = fastBitmap.GetPixel(x, y);
                         result.texture[index++] = pixel.R / 255f;
                         result.texture[index++] = pixel.G / 255f;
                         result.texture[index++] = pixel.B / 255f;
