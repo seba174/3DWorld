@@ -75,9 +75,9 @@ namespace ToolBox
             float[] texturesArray = vertices.Select(v => v.TextureIndex).Select(i => textures[i]).SelectMany(t => new float[] { t.X, 1 - t.Y }).ToArray();
             float[] normalsArray = vertices.Select(v => v.NormalIndex).Select(i => normals[i]).SelectMany(n => new float[] { n.X, n.Y, n.Z }).ToArray();
             int[] indicesArray = indices.ToArray();
-            float furthestPoint = vertices.Max(v => v.Length);
+            float height = vertices.Max(v => v.Position.Y) - vertices.Min(v => v.Position.Y);
 
-            ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthestPoint);
+            ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, height);
             return data;
         }
 

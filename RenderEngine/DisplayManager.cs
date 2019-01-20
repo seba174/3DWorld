@@ -47,12 +47,12 @@ namespace RenderEngine
             TerrainTexture blendMap = new TerrainTexture(loader.InitTexture("blendMap.png"));
             TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 
-            //TexturedModel chessBoard = new TexturedModel(loader.LoadToVAO("boardWork"), new ModelTexture(loader.InitTexture("TableroDiffuse01.png")));
+            //TexturedModel chessBoard = loader.CreateTexturedModel("boardWork", "TableroDiffuse01.png");
 
-            TexturedModel tree = new TexturedModel(loader.LoadToVAO("tree"), new ModelTexture(loader.InitTexture("tree.png")));
-            TexturedModel grass = new TexturedModel(loader.LoadToVAO("grassModel"), new ModelTexture(loader.InitTexture("grassTexture.png")));
-            TexturedModel fern = new TexturedModel(loader.LoadToVAO("fern"), new ModelTexture(loader.InitTexture("fern.png")));
-            TexturedModel playerModel = new TexturedModel(loader.LoadToVAO("player"), new ModelTexture(loader.InitTexture("playerTexture.png")));
+            TexturedModel tree = loader.CreateTexturedModel("tree","tree.png");
+            TexturedModel grass = loader.CreateTexturedModel("grassModel", "grassTexture.png");
+            TexturedModel fern = loader.CreateTexturedModel("fern", "fern.png");
+            TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture.png");
 
             grass.Texture.HasTransparency = true;
             fern.Texture.HasTransparency = true;

@@ -6,7 +6,7 @@ namespace Entities
 {
     public class ThirdPersonCamera : BaseCamera
     {
-        private float distanceFromEntity = 35;
+        private float distanceFromEntity = 30;
         private float angleAroundEntity = 0;
 
         private readonly Entity entity;
@@ -15,8 +15,7 @@ namespace Entities
             : base(keyboard, mouse)
         {
             this.entity = entity;
-            Position = new Vector3(0, 10, 20);
-            Pitch = 20;
+            Pitch = 15;
         }
 
         public override void Move()
@@ -72,7 +71,7 @@ namespace Entities
             float offsetX = (float)(horizontalDistance * Math.Sin(MathHelper.DegreesToRadians(theta)));
             float offsetZ = (float)(horizontalDistance * Math.Cos(MathHelper.DegreesToRadians(theta)));
 
-            Position = entity.Position + new Vector3(-offsetX, verticalDistance, -offsetZ);
+            Position = entity.Position + new Vector3(-offsetX, entity.Height * 3 / 4 + verticalDistance, -offsetZ);
         }
     }
 }

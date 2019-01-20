@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RenderEngine;
+﻿using RenderEngine;
 using Textures;
 
 namespace Models
@@ -12,11 +7,13 @@ namespace Models
     {
         public RawModel RawModel { get; }
         public ModelTexture Texture { get; }
+        public float Height { get; }
 
-        public TexturedModel(RawModel model, ModelTexture texture)
+        public TexturedModel(RawModel model, float height, ModelTexture texture)
         {
             RawModel = model;
             Texture = texture;
+            Height = height;
         }
     }
 }

@@ -17,5 +17,7 @@ namespace Entities
             Rotation = rotation;
             Scale = scale;
         }
+
+        public float Height => Model.Height * Scale;
     }
 }

@@ -1,21 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using Models;
 using OpenTK.Graphics.OpenGL4;
 using RenderEngine;
+using Textures;
 
 namespace ToolBox
 {
     public class Loader
     {
+        private const int LevelOfMipmaping = 5;
         private const string baseTexturePath = "../../../Resources/";
         private readonly List<int> vaos = new List<int>();
         private readonly List<int> vbos = new List<int>();
         private readonly List<int> textures = new List<int>();
 
-        public RawModel LoadToVAO(string objFileName)
+        public TexturedModel CreateTexturedModel(string objFileName, string textureFileName)
         {
             ModelData data = OBJLoader.LoadObjModel(objFileName);
-            return LoadToVAO(data.Vertices, data.TextureCoordinates, data.Normals, data.Indices);
+            var rawModel = LoadToVAO(data.Vertices, data.TextureCoordinates, data.Normals, data.Indices);
+            var modelTexture = new ModelTexture(InitTexture(textureFileName));
+            return new TexturedModel(rawModel, data.Height, modelTexture);
         }
 
         public RawModel LoadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indicies)
@@ -36,9 +41,18 @@ namespace ToolBox
             var (texture, width, height) = LoadTexture(fileName);
 
             GL.CreateTextures(TextureTarget.Texture2D, 1, out int textureID);
-            GL.TextureStorage2D(textureID, 1, SizedInternalFormat.Rgba32f, width, height);
+            GL.TextureStorage2D(textureID, LevelOfMipmaping, SizedInternalFormat.Rgba32f, width, height);
             GL.BindTexture(TextureTarget.Texture2D, textureID);
             GL.TextureSubImage2D(textureID, 0, 0, 0, width, height, PixelFormat.Rgba, PixelType.Float, texture);
+
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            GL.TextureParameter(textureID, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+
+            GL.GetFloat((GetPName)OpenTK.Graphics.ES30.ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out float maxAnsio);
+            GL.TextureParameter(textureID, (TextureParameterName)OpenTK.Graphics.ES30.ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAnsio);
+
+            //GL.TextureParameter(textureID, TextureParameterName.TextureLodBias, -1f);
+
             textures.Add(textureID);
 
             return textureID;
