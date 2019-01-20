@@ -56,7 +56,7 @@ namespace RenderEngine
             shader.Stop();
 
             terrainShader.Start();
-            shader.LoadSkyColour(SkyColour);
+            terrainShader.LoadSkyColour(SkyColour);
             terrainShader.LoadLight(sun);
             terrainShader.LoadViewMatrix(camera);
             terrainRenderer.Render(terrains);
