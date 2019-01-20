@@ -1,5 +1,5 @@
 ﻿using System;
-using InputHandlings;
+using InputHandling;
 using Models;
 using OpenTK;
 

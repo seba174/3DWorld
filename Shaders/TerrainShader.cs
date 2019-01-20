@@ -83,7 +83,7 @@ namespace Shaders
             LoadMatrix(location_projectionMatrix, matrix);
         }
 
-        public void LoadViewMatrix(Camera camera)
+        public void LoadViewMatrix(BaseCamera camera)
         {
             Matrix4 viewMatrix = Maths.CreateViewMatrix(camera);
             LoadMatrix(location_viewMatrix, viewMatrix);

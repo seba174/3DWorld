@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Entities;
-using InputHandlings;
+using InputHandling;
 using Models;
 using OpenTK;
 using OpenTK.Graphics;
@@ -17,17 +17,21 @@ namespace RenderEngine
     public class DisplayManager : GameWindow
     {
         Stopwatch stopwatch = new Stopwatch();
+        private KeyboardHelper keyboard = new KeyboardHelper();
+        private MouseHelper mouse = new MouseHelper();
+
         private Loader loader = new Loader();
+        private BaseCamera camera;
+
         private List<Entity> entities;
-        private Camera camera = new Camera();
         private Light light;
         private Terrain terrain, terrain2;
         private MasterRenderer renderer;
-        private KeyboardHelper keyboard = new KeyboardHelper();
         private Player player;
 
         public DisplayManager()
-            : base(1280, 720, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D", GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
+            : base(1280, 720, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D",
+                  GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
         {
             GL.Enable(EnableCap.Multisample);
         }
@@ -74,6 +78,7 @@ namespace RenderEngine
                     new Vector3(0, 0, 0), 0.6f));
             }
 
+            camera = new Camera(keyboard, mouse);
             light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
             
             terrain = new Terrain(0, 0, loader, texturePack, blendMap);
@@ -81,22 +86,9 @@ namespace RenderEngine
 
             player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 0, 0), 0.5f);
 
+            camera = new ThirdPersonCamera(keyboard, mouse, player);
+
             stopwatch.Start();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            GL.Viewport(0, 0, Width, Height);
-        }
-
-        protected override void OnKeyDown(KeyboardKeyEventArgs e)
-        {
-            keyboard.Update(e, true);
-        }
-
-        protected override void OnKeyUp(KeyboardKeyEventArgs e)
-        {
-            keyboard.Update(e, false);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -104,8 +96,10 @@ namespace RenderEngine
             long delta = stopwatch.ElapsedMilliseconds;
             stopwatch.Restart();
 
-            camera.Move(keyboard);
             player.Move(keyboard, delta);
+            camera.Move();
+
+            mouse.ResetDeltas();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -130,6 +124,41 @@ namespace RenderEngine
             loader.CleanUp();
 
             base.OnUnload(e);
+        }
+
+
+        protected override void OnResize(EventArgs e)
+        {
+            GL.Viewport(0, 0, Width, Height);
+        }
+
+        protected override void OnKeyDown(KeyboardKeyEventArgs e)
+        {
+            keyboard.Update(e, true);
+        }
+
+        protected override void OnKeyUp(KeyboardKeyEventArgs e)
+        {
+            keyboard.Update(e, false);
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            mouse.UpdateMouseWheel(e);
+        }
+        protected override void OnMouseMove(MouseMoveEventArgs e)
+        {
+            mouse.UpdateMouseMove(e);
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            mouse.UpdateMouseButtons(e);
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            mouse.UpdateMouseButtons(e);
         }
     }
 }

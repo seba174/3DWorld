@@ -1,6 +1,6 @@
 ﻿using OpenTK.Input;
 
-namespace InputHandlings
+namespace InputHandling
 {
     public class KeyboardHelper
     {

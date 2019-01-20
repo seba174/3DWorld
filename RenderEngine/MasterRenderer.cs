@@ -44,7 +44,7 @@ namespace RenderEngine
             terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         }
 
-        public void Render(Light sun, Camera camera)
+        public void Render(Light sun, BaseCamera camera)
         {
             Prepare();
 

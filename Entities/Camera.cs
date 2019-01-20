@@ -1,30 +1,32 @@
-﻿using InputHandlings;
+﻿using InputHandling;
 using OpenTK;
 
 namespace Entities
 {
-    public class Camera
+    public class Camera : BaseCamera
     {
-        public Vector3 Position { get; private set; } = new Vector3(0, 7, 0);
-        public float Pitch { get; } = 10;
-        public float Yaw { get; } = 0;
-        public float Roll { get; } = 0;
-
-        public void Move(KeyboardHelper keyboard)
+        public Camera(KeyboardHelper keyboard, MouseHelper mouse)
+            : base(keyboard, mouse)
         {
-            if (keyboard.LeftArrowPressed)
+            Position = new Vector3(0, 10, 0);
+            Pitch = 10;
+        }
+
+        public override void Move()
+        {
+            if (Keyboard.LeftArrowPressed)
             {
                 Position += new Vector3(-0.3f, 0, 0);
             }
-            if (keyboard.UpArrowPressed)
+            if (Keyboard.UpArrowPressed)
             {
                 Position += new Vector3(0, 0, -0.3f);
             }
-            if (keyboard.RightArrowPressed)
+            if (Keyboard.RightArrowPressed)
             {
                 Position += new Vector3(0.3f, 0, 0);
             }
-            if (keyboard.DownArrowPressed)
+            if (Keyboard.DownArrowPressed)
             {
                 Position += new Vector3(0, 0, 0.3f);
             }

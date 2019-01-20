@@ -19,14 +19,15 @@ namespace ToolBox
             return matrix;
         }
 
-        public static Matrix4 CreateViewMatrix(Camera camera)
+        public static Matrix4 CreateViewMatrix(BaseCamera camera)
         {
             Matrix4 viewMatrix = Matrix4.Identity;
             Vector3 negativeCameraPosition = -camera.Position;
 
             viewMatrix *= Matrix4.CreateTranslation(negativeCameraPosition);
-            viewMatrix *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(camera.Pitch));
+
             viewMatrix *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(camera.Yaw));
+            viewMatrix *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(camera.Pitch));
 
             return viewMatrix;
         }
