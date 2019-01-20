@@ -1,4 +1,6 @@
-﻿using OpenTK;
+﻿using System;
+using Entities;
+using OpenTK;
 using RenderEngine;
 using Textures;
 using ToolBox;
@@ -18,6 +20,8 @@ namespace Terrains
         public TerrainTexturePack TexturePack { get; private set; }
         public TerrainTexture BlendMap { get; }
 
+        private float[,] heights;
+
         public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, string heightMap)
         {
             TexturePack = texturePack;
@@ -28,12 +32,48 @@ namespace Terrains
             Model = GenerateTerrain(loader, baseResourcesPath + heightMap);
         }
 
+        public bool IsOnTerrain(Vector3 Position)
+        {
+            if (Position.X >= X && Position.X <= X + Size && Position.Z >= Z && Position.Z <= Z + Size)
+                return true;
+            return false;
+        }
+
+        public float GetHeight(float worldX, float worldZ)
+        {
+            float terrainX = worldX - X;
+            float terrainZ = worldZ - Z;
+            int heightsSize = heights.GetLength(0);
+
+            float gridSquareSize = Size / heightsSize;
+            int gridX = (int)Math.Floor(terrainX / gridSquareSize);
+            int gridZ = (int)Math.Floor(terrainZ / gridSquareSize);
+     
+            if (gridX < 0 || gridX >= heightsSize -1|| gridZ < 0 || gridZ >= heightsSize - 1)
+            {
+                return 0;
+            }
+            float xCoord = (terrainX % gridSquareSize) / gridSquareSize;
+            float ZCoord = (terrainZ % gridSquareSize) / gridSquareSize;
+            if (xCoord <= (1 - ZCoord))
+            {
+                return Maths.BarryCentric(new Vector3(0, heights[gridX, gridZ], 0), new Vector3(1, heights[gridX + 1, gridZ], 0),
+                    new Vector3(0, heights[gridX, gridZ + 1], 1), new Vector2(xCoord, ZCoord));
+            }
+            else
+            {
+                return Maths.BarryCentric(new Vector3(1, heights[gridX + 1, gridZ], 0), new Vector3(1, heights[gridX + 1, gridZ + 1], 1),
+                    new Vector3(0, heights[gridX, gridZ + 1], 1), new Vector2(xCoord, ZCoord));
+            }
+        }
+
         private RawModel GenerateTerrain(Loader loader, string heightMapPath)
         {
             using (var heightMap = FastBitmapExtensions.GetLockedFastBitmap(heightMapPath))
             {
                 int VertexCount = heightMap.Height;
 
+                heights = new float[VertexCount, VertexCount];
                 int count = VertexCount * VertexCount;
                 float[] vertices = new float[count * 3];
                 float[] normals = new float[count * 3];
@@ -44,9 +84,11 @@ namespace Terrains
                 {
                     for (int j = 0; j < VertexCount; j++)
                     {
-                        vertices[vertexPointer * 3] = j / ((float)VertexCount - 1) * Size - 600;
-                        vertices[vertexPointer * 3 + 1] = GetHeight(j, i, heightMap);
-                        vertices[vertexPointer * 3 + 2] = i / ((float)VertexCount - 1) * Size - 600;
+                        vertices[vertexPointer * 3] = j / ((float)VertexCount - 1) * Size;
+                        float height = GetHeight(j, i, heightMap);
+                        heights[j, i] = height;
+                        vertices[vertexPointer * 3 + 1] = height;
+                        vertices[vertexPointer * 3 + 2] = i / ((float)VertexCount - 1) * Size;
 
                         Vector3 normal = CalculateNormal(j, i, heightMap);
                         normals[vertexPointer * 3] = normal.X;

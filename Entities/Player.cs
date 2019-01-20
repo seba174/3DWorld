@@ -24,7 +24,7 @@ namespace Entities
         {
         }
 
-        public void Move(KeyboardHelper keyboard, long frameTime)
+        public void Move(KeyboardHelper keyboard, Func<float, float, float> GetHeight, long frameTime)
         {
             UpdateSpeeds(keyboard);
             Rotation += new Vector3(0, currentTurnSpeed * frameTime, 0);
@@ -37,10 +37,11 @@ namespace Entities
             upwardsSpeed += GRAVITY * frameTime;
             Position += new Vector3(0, upwardsSpeed, 0);
 
-            if (Position.Y < TERRAIN_HEIGHT)
+            float terrainHeight = GetHeight(Position.X, Position.Z);
+            if (Position.Y < terrainHeight)
             {
                 upwardsSpeed = 0;
-                Position = new Vector3(Position.X, TERRAIN_HEIGHT, Position.Z);
+                Position = new Vector3(Position.X, terrainHeight, Position.Z);
                 inAir = false;
             }
         }

@@ -62,7 +62,7 @@
       <Name>InputHandling</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
-      <Project>{CB5C32B0-37F3-40EA-83CB-2191C48DC44E}</Project>
+      <Project>{cb5c32b0-37f3-40ea-83cb-2191c48dc44e}</Project>
       <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Entities;
 using InputHandling;
 using Models;
@@ -16,7 +17,7 @@ namespace RenderEngine
 {
     public class DisplayManager : GameWindow
     {
-        Stopwatch stopwatch = new Stopwatch();
+        private Stopwatch stopwatch = new Stopwatch();
         private KeyboardHelper keyboard = new KeyboardHelper();
         private MouseHelper mouse = new MouseHelper();
 
@@ -24,8 +25,8 @@ namespace RenderEngine
         private BaseCamera camera;
 
         private List<Entity> entities;
+        private List<Terrain> terrains;
         private Light light;
-        private Terrain terrain, terrain2;
         private MasterRenderer renderer;
         private Player player;
 
@@ -49,42 +50,53 @@ namespace RenderEngine
 
             //TexturedModel chessBoard = loader.CreateTexturedModel("boardWork", "TableroDiffuse01.png");
 
-            TexturedModel tree = loader.CreateTexturedModel("tree","tree.png");
-            TexturedModel grass = loader.CreateTexturedModel("grassModel", "grassTexture.png");
+            TexturedModel tree = loader.CreateTexturedModel("tree", "tree.png");
+            //TexturedModel grass = loader.CreateTexturedModel("grassModel", "grassTexture.png");
             TexturedModel fern = loader.CreateTexturedModel("fern", "fern.png");
             TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture.png");
 
-            grass.Texture.HasTransparency = true;
+            //grass.Texture.HasTransparency = true;
             fern.Texture.HasTransparency = true;
 
-            grass.Texture.UseFakeLightning = true;
+            //grass.Texture.UseFakeLightning = true;
             fern.Texture.UseFakeLightning = true;
 
             tree.Texture.ShineDampler = 10;
             tree.Texture.Reflectivity = 1;
 
+            terrains = new List<Terrain>()
+            {
+                new Terrain(0, -1, loader, texturePack, blendMap, "heightMap.png"),
+                new Terrain(-1, -1, loader, texturePack, blendMap, "heightMap.png")
+            };
+
             Random rdn = new Random();
             entities = new List<Entity>();
 
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 1200; i++)
             {
                 //entities.Add(new Entity(chessBoard, new Vector3((float)rdn.NextDouble() * 800 - 400, 5, (float)rdn.NextDouble() * -600),
                 //    new Vector3(180, 0, 0), 3));
-                entities.Add(new Entity(tree, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                    new Vector3(0, 0, 0), 3));
-                entities.Add(new Entity(grass, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                    new Vector3(0, 0, 0), 1));
-                entities.Add(new Entity(fern, new Vector3((float)rdn.NextDouble() * 800 - 400, 0, (float)rdn.NextDouble() * -600),
-                    new Vector3(0, 0, 0), 0.6f));
+
+                float x = (float)rdn.NextDouble() * 800 - 400;
+                float z = (float)rdn.NextDouble() * -600;
+                float y = terrains.Where(t => t.IsOnTerrain(new Vector3(x, 0, z))).FirstOrDefault()?.GetHeight(x, z) ?? 0;
+
+                if (i % 2 == 0)
+                {
+                    entities.Add(new Entity(tree, new Vector3(x, y, z), new Vector3(0, 0, 0), 3));
+                }
+                else
+                {
+                    entities.Add(new Entity(fern, new Vector3(x, y, z), new Vector3(0, 0, 0), 0.6f));
+                }
             }
 
             camera = new Camera(keyboard, mouse);
             light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
-            
-            terrain = new Terrain(0, 0, loader, texturePack, blendMap, "heightMap.png");
-            terrain2 = new Terrain(1, 0, loader, texturePack, blendMap, "heightMap.png");
 
-            player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 0, 0), 0.5f);
+
+            player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 180, 0), 0.5f);
 
             camera = new ThirdPersonCamera(keyboard, mouse, player);
 
@@ -96,7 +108,8 @@ namespace RenderEngine
             long delta = stopwatch.ElapsedMilliseconds;
             stopwatch.Restart();
 
-            player.Move(keyboard, delta);
+            var terrainWherePlayerStands = terrains.Where(t => t.IsOnTerrain(player.Position)).FirstOrDefault();
+            player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, delta);
             camera.Move();
 
             mouse.ResetDeltas();
@@ -104,9 +117,12 @@ namespace RenderEngine
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            foreach (var terrain in terrains)
+            {
+                renderer.ProcessTerrain(terrain);
+            }
+
             renderer.ProcessEntity(player);
-            renderer.ProcessTerrain(terrain);
-            renderer.ProcessTerrain(terrain2);
 
             foreach (var entity in entities)
             {
