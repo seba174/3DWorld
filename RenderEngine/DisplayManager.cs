@@ -48,18 +48,12 @@ namespace RenderEngine
             TerrainTexture blendMap = new TerrainTexture(loader.InitTexture("blendMap.png"));
             TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 
-            //TexturedModel chessBoard = loader.CreateTexturedModel("boardWork", "TableroDiffuse01.png");
-
             TexturedModel tree = loader.CreateTexturedModel("tree", "tree.png");
-            //TexturedModel grass = loader.CreateTexturedModel("grassModel", "grassTexture.png");
-            TexturedModel fern = loader.CreateTexturedModel("fern", "fern.png");
+            TexturedModel fernTextureAtlas = loader.CreateTexturedModel("fern", "fern.png", 2);
             TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture.png");
 
-            //grass.Texture.HasTransparency = true;
-            fern.Texture.HasTransparency = true;
-
-            //grass.Texture.UseFakeLightning = true;
-            fern.Texture.UseFakeLightning = true;
+            fernTextureAtlas.Texture.HasTransparency = true;
+            fernTextureAtlas.Texture.UseFakeLightning = true;
 
             tree.Texture.ShineDampler = 10;
             tree.Texture.Reflectivity = 1;
@@ -75,9 +69,6 @@ namespace RenderEngine
 
             for (int i = 0; i < 1200; i++)
             {
-                //entities.Add(new Entity(chessBoard, new Vector3((float)rdn.NextDouble() * 800 - 400, 5, (float)rdn.NextDouble() * -600),
-                //    new Vector3(180, 0, 0), 3));
-
                 float x = (float)rdn.NextDouble() * 800 - 400;
                 float z = (float)rdn.NextDouble() * -600;
                 float y = terrains.Where(t => t.IsOnTerrain(new Vector3(x, 0, z))).FirstOrDefault()?.GetHeight(x, z) ?? 0;
@@ -88,7 +79,7 @@ namespace RenderEngine
                 }
                 else
                 {
-                    entities.Add(new Entity(fern, new Vector3(x, y, z), new Vector3(0, 0, 0), 0.6f));
+                    entities.Add(new Entity(fernTextureAtlas, rdn.Next() % 4, new Vector3(x, y, z), new Vector3(0, 0, 0), 0.6f));
                 }
             }
 

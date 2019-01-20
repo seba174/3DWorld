@@ -51,6 +51,7 @@ namespace RenderEngine
             {
                 MasterRenderer.DisableCulling();
             }
+            shader.LoadNumberOfRows(texture.NumberOfRows);
             shader.LoadFakeLightingVariable(texture.UseFakeLightning);
             shader.LoadShineVariables(texture.ShineDampler, texture.Reflectivity);
 
@@ -74,6 +75,7 @@ namespace RenderEngine
         {
             Matrix4 transformationMatrix = Maths.CreateTransformationMatrix(entity.Position, entity.Rotation, entity.Scale);
             shader.LoadTransformationMatrix(transformationMatrix);
+            shader.LoadOffset(entity.GetTextureXOffset(), entity.GetTextureYOffset());
         }
     }
 }

@@ -65,6 +65,10 @@
       <Project>{cb5c32b0-37f3-40ea-83cb-2191c48dc44e}</Project>
       <Name>Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Textures\Textures.csproj">
+      <Project>{3D5FC2B7-9C35-4C9B-9EA0-DC33F0C7521B}</Project>
+      <Name>Textures</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

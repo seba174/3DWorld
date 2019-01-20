@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using Models;
 using OpenTK.Graphics.OpenGL4;
 using RenderEngine;
@@ -15,11 +14,14 @@ namespace ToolBox
         private readonly List<int> vbos = new List<int>();
         private readonly List<int> textures = new List<int>();
 
-        public TexturedModel CreateTexturedModel(string objFileName, string textureFileName)
+        public TexturedModel CreateTexturedModel(string objFileName, string textureFileName, int numberOfRows = 1)
         {
             ModelData data = OBJLoader.LoadObjModel(objFileName);
             var rawModel = LoadToVAO(data.Vertices, data.TextureCoordinates, data.Normals, data.Indices);
-            var modelTexture = new ModelTexture(InitTexture(textureFileName));
+            var modelTexture = new ModelTexture(InitTexture(textureFileName))
+            {
+                NumberOfRows = numberOfRows
+            };
             return new TexturedModel(rawModel, data.Height, modelTexture);
         }
 

@@ -18,6 +18,8 @@ namespace Shaders
         private int location_reflectivity;
         private int location_useFakeLighting;
         private int location_skyColour;
+        private int location_numberOfRows;
+        private int location_offset;
 
         public StaticShader() : base(VertexFile, FragmentFile)
         {
@@ -41,6 +43,18 @@ namespace Shaders
             location_reflectivity = GetUniformLocation("reflectivity");
             location_useFakeLighting = GetUniformLocation("useFakeLighting");
             location_skyColour = GetUniformLocation("skyColour");
+            location_numberOfRows = GetUniformLocation("numberOfRows");
+            location_offset = GetUniformLocation("offset");
+        }
+
+        public void LoadNumberOfRows(int numberOfRows)
+        {
+            LoadFloat(location_numberOfRows, numberOfRows);
+        }
+
+        public void LoadOffset(float x, float y)
+        {
+            LoadVector(location_offset, new Vector2(x, y));
         }
 
         public void LoadSkyColour(Vector3 color)

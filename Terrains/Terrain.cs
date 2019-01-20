@@ -43,13 +43,13 @@ namespace Terrains
         {
             float terrainX = worldX - X;
             float terrainZ = worldZ - Z;
-            int heightsSize = heights.GetLength(0);
+            int heightsSize = heights.GetLength(0) - 1;
 
             float gridSquareSize = Size / heightsSize;
             int gridX = (int)Math.Floor(terrainX / gridSquareSize);
             int gridZ = (int)Math.Floor(terrainZ / gridSquareSize);
      
-            if (gridX < 0 || gridX >= heightsSize -1|| gridZ < 0 || gridZ >= heightsSize - 1)
+            if (gridX < 0 || gridX >= heightsSize|| gridZ < 0 || gridZ >= heightsSize)
             {
                 return 0;
             }

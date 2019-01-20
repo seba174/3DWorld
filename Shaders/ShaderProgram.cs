@@ -78,6 +78,11 @@ namespace Shaders
             GL.Uniform3(location, vector);
         }
 
+        protected void LoadVector(int location, Vector2 vector)
+        {
+            GL.Uniform2(location, vector);
+        }
+
         protected void LoadBoolean(int location, bool value)
         {
             float toLoad = value == true ? 1 : 0;
