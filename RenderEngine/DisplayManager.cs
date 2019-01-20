@@ -26,7 +26,7 @@ namespace RenderEngine
 
         private List<Entity> entities;
         private List<Terrain> terrains;
-        private Light light;
+        private List<Light> lights;
         private MasterRenderer renderer;
         private Player player;
 
@@ -83,12 +83,16 @@ namespace RenderEngine
                 }
             }
 
-            camera = new Camera(keyboard, mouse);
-            light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
-
+            lights = new List<Light>()
+            {
+                new Light(new Vector3(0, 2000, 2000), new Vector3(1, 1, 1)),
+                //new Light(new Vector3(-200, 10, -200), new Vector3(10,0,0)),
+                //new Light(new Vector3(200,10,200), new Vector3(0,0,10))
+            };
 
             player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 180, 0), 0.5f);
 
+            camera = new Camera(keyboard, mouse);
             camera = new ThirdPersonCamera(keyboard, mouse, player);
 
             stopwatch.Start();
@@ -120,7 +124,7 @@ namespace RenderEngine
                 renderer.ProcessEntity(entity);
             }
 
-            renderer.Render(light, camera);
+            renderer.Render(lights, camera);
 
             SwapBuffers();
         }

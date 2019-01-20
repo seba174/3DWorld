@@ -42,8 +42,9 @@
     <None Include="VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseShader.cs" />
     <Compile Include="ShaderProgram.cs" />
-    <Compile Include="StaticShader.cs" />
+    <Compile Include="EntityShader.cs" />
     <Compile Include="TerrainShader.cs" />
   </ItemGroup>
   <ItemGroup>

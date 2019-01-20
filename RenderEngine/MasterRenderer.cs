@@ -18,7 +18,7 @@ namespace RenderEngine
 
         private int height, width;
 
-        private StaticShader shader;
+        private EntityShader shader;
         private EntityRenderer renderer;
 
         private TerrainShader terrainShader;
@@ -35,7 +35,7 @@ namespace RenderEngine
 
             EnableCulling();
 
-            shader = new StaticShader();
+            shader = new EntityShader();
             terrainShader = new TerrainShader();
 
             CreateProjectionMatrix();
@@ -44,20 +44,20 @@ namespace RenderEngine
             terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         }
 
-        public void Render(Light sun, BaseCamera camera)
+        public void Render(List<Light> lights, BaseCamera camera)
         {
             Prepare();
 
             shader.Start();
             shader.LoadSkyColour(SkyColour);
-            shader.LoadLight(sun);
+            shader.LoadLights(lights);
             shader.LoadViewMatrix(camera);
             renderer.Render(entities);
             shader.Stop();
 
             terrainShader.Start();
             terrainShader.LoadSkyColour(SkyColour);
-            terrainShader.LoadLight(sun);
+            terrainShader.LoadLights(lights);
             terrainShader.LoadViewMatrix(camera);
             terrainRenderer.Render(terrains);
             terrainShader.Stop();

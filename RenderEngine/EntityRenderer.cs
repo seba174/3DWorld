@@ -12,9 +12,9 @@ namespace RenderEngine
 {
     public class EntityRenderer
     {
-        private StaticShader shader;
+        private EntityShader shader;
 
-        public EntityRenderer(StaticShader shader, Matrix4 projectionMatrix)
+        public EntityRenderer(EntityShader shader, Matrix4 projectionMatrix)
         {
             this.shader = shader;
 
