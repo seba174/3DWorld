@@ -51,12 +51,17 @@
     <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{E586903D-5E3F-4A07-8A5E-57F306F712AD}</Project>
       <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InputHandling\InputHandling.csproj">
+      <Project>{926F3009-5C28-409F-936F-C499D0962326}</Project>
+      <Name>InputHandling</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{cb5c32b0-37f3-40ea-83cb-2191c48dc44e}</Project>

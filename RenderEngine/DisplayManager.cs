@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Entities;
+using InputHandlings;
 using Models;
 using OpenTK;
 using OpenTK.Graphics;
@@ -14,14 +16,15 @@ namespace RenderEngine
 {
     public class DisplayManager : GameWindow
     {
-        private Loader loader;
+        Stopwatch stopwatch = new Stopwatch();
+        private Loader loader = new Loader();
         private List<Entity> entities;
-        private Camera camera;
+        private Camera camera = new Camera();
         private Light light;
         private Terrain terrain, terrain2;
         private MasterRenderer renderer;
-
-        private bool keyW, keyD, keyA;
+        private KeyboardHelper keyboard = new KeyboardHelper();
+        private Player player;
 
         public DisplayManager()
             : base(1280, 720, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D", GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
@@ -31,7 +34,7 @@ namespace RenderEngine
 
         protected override void OnLoad(EventArgs e)
         {
-            loader = new Loader();
+            renderer = new MasterRenderer(Height, Width);
 
             TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy.png"));
             TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud.png"));
@@ -45,6 +48,7 @@ namespace RenderEngine
             TexturedModel tree = new TexturedModel(loader.LoadToVAO("tree"), new ModelTexture(loader.InitTexture("tree.png")));
             TexturedModel grass = new TexturedModel(loader.LoadToVAO("grassModel"), new ModelTexture(loader.InitTexture("grassTexture.png")));
             TexturedModel fern = new TexturedModel(loader.LoadToVAO("fern"), new ModelTexture(loader.InitTexture("fern.png")));
+            TexturedModel playerModel = new TexturedModel(loader.LoadToVAO("player"), new ModelTexture(loader.InitTexture("playerTexture.png")));
 
             grass.Texture.HasTransparency = true;
             fern.Texture.HasTransparency = true;
@@ -71,13 +75,13 @@ namespace RenderEngine
             }
 
             light = new Light(new Vector3(2000, 2000, 2000), new Vector3(1, 1, 1));
-
+            
             terrain = new Terrain(0, 0, loader, texturePack, blendMap);
             terrain2 = new Terrain(1, 0, loader, texturePack, blendMap);
 
-            renderer = new MasterRenderer(Height, Width);
+            player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 0, 0), 0.5f);
 
-            camera = new Camera();
+            stopwatch.Start();
         }
 
         protected override void OnResize(EventArgs e)
@@ -87,23 +91,26 @@ namespace RenderEngine
 
         protected override void OnKeyDown(KeyboardKeyEventArgs e)
         {
-            ProcessKeyInput(e, true);
+            keyboard.Update(e, true);
         }
 
         protected override void OnKeyUp(KeyboardKeyEventArgs e)
         {
-            ProcessKeyInput(e, false);
+            keyboard.Update(e, false);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            base.OnUpdateFrame(e);
+            long delta = stopwatch.ElapsedMilliseconds;
+            stopwatch.Restart();
+
+            camera.Move(keyboard);
+            player.Move(keyboard, delta);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            camera.Move(keyW, keyD, keyA);
-
+            renderer.ProcessEntity(player);
             renderer.ProcessTerrain(terrain);
             renderer.ProcessTerrain(terrain2);
 
@@ -123,19 +130,6 @@ namespace RenderEngine
             loader.CleanUp();
 
             base.OnUnload(e);
-        }
-
-        private void ProcessKeyInput(KeyboardKeyEventArgs e, bool enable)
-        {
-            switch (e.Key)
-            {
-                case Key.A:
-                    keyA = enable; break;
-                case Key.D:
-                    keyD = enable; break;
-                case Key.W:
-                    keyW = enable; break;
-            }
         }
     }
 }

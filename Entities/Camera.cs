@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using InputHandlings;
+using OpenTK;
 
 namespace Entities
 {
@@ -9,19 +10,23 @@ namespace Entities
         public float Yaw { get; } = 0;
         public float Roll { get; } = 0;
 
-        public void Move(bool keyW, bool keyD, bool keyA)
+        public void Move(KeyboardHelper keyboard)
         {
-            if (keyA)
+            if (keyboard.LeftArrowPressed)
             {
-                Position += new Vector3(-0.6f, 0, 0);
+                Position += new Vector3(-0.3f, 0, 0);
             }
-            if (keyW)
+            if (keyboard.UpArrowPressed)
             {
-                Position += new Vector3(0, 0, -0.6f);
+                Position += new Vector3(0, 0, -0.3f);
             }
-            if(keyD)
+            if (keyboard.RightArrowPressed)
             {
-                Position += new Vector3(0.6f, 0, 0);
+                Position += new Vector3(0.3f, 0, 0);
+            }
+            if (keyboard.DownArrowPressed)
+            {
+                Position += new Vector3(0, 0, 0.3f);
             }
         }
     }
