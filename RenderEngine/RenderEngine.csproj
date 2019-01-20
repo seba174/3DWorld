@@ -71,6 +71,10 @@
       <Project>{FDD74173-421C-46C0-A60C-DF01D6E36097}</Project>
       <Name>Shaders</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Skybox\Skybox.csproj">
+      <Project>{B4ABA5A1-E479-4624-80C3-09B338028F9E}</Project>
+      <Name>Skybox</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Terrains\Terrains.csproj">
       <Project>{F1216F6C-59D0-4063-8063-52ECD4A8DE39}</Project>
       <Name>Terrains</Name>

@@ -60,6 +60,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Constants\Constants.csproj">
+      <Project>{2950FE1A-122D-496E-86A8-CB6A2366BE92}</Project>
+      <Name>Constants</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{E586903D-5E3F-4A07-8A5E-57F306F712AD}</Project>
       <Name>Entities</Name>

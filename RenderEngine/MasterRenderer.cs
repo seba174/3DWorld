@@ -5,7 +5,9 @@ using Models;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Shaders;
+using Skybox;
 using Terrains;
+using ToolBox;
 
 namespace RenderEngine
 {
@@ -16,7 +18,7 @@ namespace RenderEngine
         private const float FAR_PLANE = 1000;
         private static Vector3 SkyColour = new Vector3(0.5f, 0.5f, 0.5f);
 
-        private int height, width;
+        private readonly int height, width;
 
         private EntityShader shader;
         private EntityRenderer renderer;
@@ -24,11 +26,13 @@ namespace RenderEngine
         private TerrainShader terrainShader;
         private TerrainRenderer terrainRenderer;
 
+        private SkyboxRenderer skyboxRenderer;
+
         private Matrix4 projectionMatrix;
         private Dictionary<TexturedModel, List<Entity>> entities = new Dictionary<TexturedModel, List<Entity>>();
         private List<Terrain> terrains = new List<Terrain>();
 
-        public MasterRenderer(int height, int width)
+        public MasterRenderer(int height, int width, Loader loader)
         {
             this.height = height;
             this.width = width;
@@ -42,6 +46,7 @@ namespace RenderEngine
 
             renderer = new EntityRenderer(shader, projectionMatrix);
             terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+            skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
         }
 
         public void Render(List<Light> lights, BaseCamera camera)
@@ -61,6 +66,8 @@ namespace RenderEngine
             terrainShader.LoadViewMatrix(camera);
             terrainRenderer.Render(terrains);
             terrainShader.Stop();
+
+            skyboxRenderer.Render(camera);
 
             entities.Clear();
             terrains.Clear();

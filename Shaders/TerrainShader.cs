@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entities;
-using OpenTK;
-using ToolBox;
+﻿using Utilities;
 
 namespace Shaders
 {
     public class TerrainShader : BaseShader
     {
-        private static string VertexFile = basePath + "TerrainVertexShader.glsl";
-        private static string FragmentFile = basePath + "TerrainFragmentShader.glsl";
+        private const string VertexFile = Constants.BaseShaderFolder + "TerrainVertexShader.glsl";
+        private const string FragmentFile = Constants.BaseShaderFolder + "TerrainFragmentShader.glsl";
 
         private int location_backgroundTexture;
         private int location_rTexture;

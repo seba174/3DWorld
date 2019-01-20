@@ -1,15 +1,14 @@
 ﻿using System;
-using Entities;
 using OpenTK;
 using RenderEngine;
 using Textures;
 using ToolBox;
+using Utilities;
 
 namespace Terrains
 {
     public class Terrain
     {
-        private const string baseResourcesPath = "../../../Resources/";
         private const float Size = 800;
         private const float MaxHeight = 40;
 
@@ -29,13 +28,16 @@ namespace Terrains
 
             X = gridX * Size;
             Z = gridZ * Size;
-            Model = GenerateTerrain(loader, baseResourcesPath + heightMap);
+            Model = GenerateTerrain(loader, Constants.BaseResourcesPath + heightMap + Constants.TextureFileExtension);
         }
 
         public bool IsOnTerrain(Vector3 Position)
         {
             if (Position.X >= X && Position.X <= X + Size && Position.Z >= Z && Position.Z <= Z + Size)
+            {
                 return true;
+            }
+
             return false;
         }
 
@@ -48,8 +50,8 @@ namespace Terrains
             float gridSquareSize = Size / heightsSize;
             int gridX = (int)Math.Floor(terrainX / gridSquareSize);
             int gridZ = (int)Math.Floor(terrainZ / gridSquareSize);
-     
-            if (gridX < 0 || gridX >= heightsSize|| gridZ < 0 || gridZ >= heightsSize)
+
+            if (gridX < 0 || gridX >= heightsSize || gridZ < 0 || gridZ >= heightsSize)
             {
                 return 0;
             }

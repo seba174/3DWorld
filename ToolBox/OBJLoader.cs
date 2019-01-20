@@ -2,14 +2,12 @@
 using System.IO;
 using System.Linq;
 using OpenTK;
+using Utilities;
 
 namespace ToolBox
 {
     public class OBJLoader
     {
-        private const string baseObjPath = "../../../Resources/";
-        private const string type = ".obj";
-
         public static ModelData LoadObjModel(string fileName)
         {
             var vertices = new List<Vertex>();
@@ -17,7 +15,7 @@ namespace ToolBox
             var normals = new List<Vector3>();
             var indices = new List<int>();
 
-            using (var fr = new StreamReader(baseObjPath + fileName + type))
+            using (var fr = new StreamReader(Constants.BaseObjFilesFolder + fileName + Constants.ObjFileExtension))
             {
                 string line = null;
 

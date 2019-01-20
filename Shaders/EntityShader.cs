@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using Entities;
-using OpenTK;
-using ToolBox;
+﻿using OpenTK;
+using Utilities;
 
 namespace Shaders
 {
     public class EntityShader : BaseShader
     {
-        private static string VertexFile = basePath + "VertexShader.glsl";
-        private static string FragmentFile = basePath + "FragmentShader.glsl";
+        private static string VertexFile = Constants.BaseShaderFolder + "VertexShader.glsl";
+        private static string FragmentFile = Constants.BaseShaderFolder + "FragmentShader.glsl";
 
         private int location_useFakeLighting;
         private int location_numberOfRows;

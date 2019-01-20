@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using Models;
 using OpenTK.Graphics.OpenGL4;
 using RenderEngine;
 using Textures;
+using Utilities;
+using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
 namespace ToolBox
 {
     public class Loader
     {
         private const int LevelOfMipmaping = 5;
-        private const string baseTexturePath = "../../../Resources/";
+        
         private readonly List<int> vaos = new List<int>();
         private readonly List<int> vbos = new List<int>();
         private readonly List<int> textures = new List<int>();
@@ -36,6 +40,14 @@ namespace ToolBox
             UnbindVAO();
 
             return new RawModel(vaoID, indicies.Length);
+        }
+
+        public RawModel LoadToVAO(float[] positions, int dimensions)
+        {
+            int vaoID = CreateVAO();
+            StoreDataInAttributesList(0, dimensions, positions);
+            UnbindVAO();
+            return new RawModel(vaoID, positions.Length / dimensions);
         }
 
         public int InitTexture(string fileName)
@@ -119,7 +131,7 @@ namespace ToolBox
         {
             (float[] texture, int width, int height) result;
 
-            using (var fastBitmap = FastBitmapExtensions.GetLockedFastBitmap(baseTexturePath + fileName))
+            using (var fastBitmap = FastBitmapExtensions.GetLockedFastBitmap(Constants.BaseResourcesPath + fileName + Constants.TextureFileExtension))
             {
                 result.width = fastBitmap.Width;
                 result.height = fastBitmap.Height;
@@ -140,6 +152,31 @@ namespace ToolBox
             }
 
             return result;
+        }
+
+        public int LoadCubeMap(string[] textureFiles)
+        {
+            int texID = GL.GenTexture();
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.TextureCubeMap, texID);
+
+            for (int i = 0; i < textureFiles.Length; i++)
+            {
+                Bitmap image = new Bitmap(Constants.BaseResourcesPath + textureFiles[i] + Constants.TextureFileExtension);
+
+                BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
+                    ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, PixelInternalFormat.Rgba, data.Width, data.Height,
+                    0, PixelFormat.Rgba, PixelType.UnsignedByte, data.Scan0);
+
+                image.UnlockBits(data);
+            }
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (float)All.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (float)All.Linear);
+
+            textures.Add(texID);
+            return texID;
         }
     }
 }

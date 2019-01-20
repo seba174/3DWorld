@@ -31,7 +31,7 @@ namespace RenderEngine
         private Player player;
 
         public DisplayManager()
-            : base(1280, 720, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D",
+            : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D",
                   GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
         {
             GL.Enable(EnableCap.Multisample);
@@ -39,19 +39,19 @@ namespace RenderEngine
 
         protected override void OnLoad(EventArgs e)
         {
-            renderer = new MasterRenderer(Height, Width);
+            renderer = new MasterRenderer(Height, Width, loader);
 
-            TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy.png"));
-            TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud.png"));
-            TerrainTexture gTexture = new TerrainTexture(loader.InitTexture("grassFlowers.png"));
-            TerrainTexture bTexture = new TerrainTexture(loader.InitTexture("path.png"));
-            TerrainTexture blendMap = new TerrainTexture(loader.InitTexture("blendMap.png"));
+            TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy"));
+            TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud"));
+            TerrainTexture gTexture = new TerrainTexture(loader.InitTexture("grassFlowers"));
+            TerrainTexture bTexture = new TerrainTexture(loader.InitTexture("path"));
+            TerrainTexture blendMap = new TerrainTexture(loader.InitTexture("blendMap"));
             TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 
-            TexturedModel tree = loader.CreateTexturedModel("tree", "tree.png");
-            TexturedModel fernTextureAtlas = loader.CreateTexturedModel("fern", "fern.png", 2);
-            TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture.png");
-            TexturedModel lamp = loader.CreateTexturedModel("lamp", "lamp.png");
+            TexturedModel tree = loader.CreateTexturedModel("tree", "tree");
+            TexturedModel fernTextureAtlas = loader.CreateTexturedModel("fern", "fern", 2);
+            TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture");
+            TexturedModel lamp = loader.CreateTexturedModel("lamp", "lamp");
 
             fernTextureAtlas.Texture.HasTransparency = true;
             fernTextureAtlas.Texture.UseFakeLightning = true;
@@ -61,8 +61,8 @@ namespace RenderEngine
 
             terrains = new List<Terrain>()
             {
-                new Terrain(0, -1, loader, texturePack, blendMap, "heightMap.png"),
-                new Terrain(-1, -1, loader, texturePack, blendMap, "heightMap.png")
+                new Terrain(0, -1, loader, texturePack, blendMap, "heightMap"),
+                new Terrain(-1, -1, loader, texturePack, blendMap, "heightMap")
             };
 
             Random rdn = new Random();
@@ -70,7 +70,7 @@ namespace RenderEngine
 
             lights = new List<Light>()
             {
-                new Light(new Vector3(0, 2000, 2000), new Vector3(1f, 1f, 1f)),
+                new Light(new Vector3(0, 1000, 2000), new Vector3(0.2f, 0.2f, 0.2f)),
             };
 
             for (int i = 0; i < 1000; i++)
@@ -108,7 +108,6 @@ namespace RenderEngine
             Vector3 lampAttenuation = new Vector3(1, 0.01f, 0.002f);
 
             lampModel.Texture.UseFakeLightning = true;
-            //lampModel.Texture.HasTransparency = true;
 
             Entity lamp = new Entity(lampModel, position, new Vector3(0, 0, 0), scale);
 
