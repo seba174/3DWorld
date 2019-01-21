@@ -9,6 +9,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
+using Shaders;
 using Terrains;
 using Textures;
 using ToolBox;
@@ -31,6 +32,7 @@ namespace RenderEngine
         private List<Terrain> terrains;
         private List<Light> lights;
         private MasterRenderer renderer;
+        private ShadingType shadingType = ShadingType.Phong;
         private Player player;
 
         private Light Sun => lights.First();
@@ -52,7 +54,7 @@ namespace RenderEngine
 
         protected override void OnLoad(EventArgs e)
         {
-            renderer = new MasterRenderer(screen, loader);
+            renderer = new MasterRenderer(screen, loader, shadingType);
 
             TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy"));
             TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud"));
@@ -62,12 +64,9 @@ namespace RenderEngine
             TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 
             TexturedModel tree = loader.CreateTexturedModel("tree", "tree");
-            TexturedModel fernTextureAtlas = loader.CreateTexturedModel("fern", "fern", 2);
+            TexturedModel rock = loader.CreateTexturedModel("rock", "rock");
             TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture");
             TexturedModel lamp = loader.CreateTexturedModel("lamp", "lamp");
-
-            fernTextureAtlas.Texture.HasTransparency = true;
-            fernTextureAtlas.Texture.UseFakeLightning = true;
 
             tree.Texture.ShineDampler = 10;
             tree.Texture.Reflectivity = 1;
@@ -102,7 +101,8 @@ namespace RenderEngine
                 }
                 else
                 {
-                    entities.Add(new Entity(fernTextureAtlas, rdn.Next() % 4, new Vector3(x, y, z), new Vector3(0, 0, 0), 0.6f));
+                    if(i % 7 == 0)
+                    entities.Add(new Entity(rock,  new Vector3(x, y, z), new Vector3(0, 0, 0), 0.4f));
                 }
             }
 
@@ -201,6 +201,22 @@ namespace RenderEngine
                         else
                         {
                             camera = new FirstPersonCamera(keyboard, mouse, player);
+                        }
+                    }
+                    break;
+                case Key.M:
+                    {
+                        if(shadingType == ShadingType.Flat)
+                        {
+                            shadingType = ShadingType.Phong;
+                            renderer.CleanUp();
+                            renderer = new MasterRenderer(screen, loader, shadingType);
+                        }
+                        else if(shadingType == ShadingType.Phong)
+                        {
+                            shadingType = ShadingType.Flat;
+                            renderer.CleanUp();
+                            renderer = new MasterRenderer(screen, loader, shadingType);
                         }
                     }
                     break;

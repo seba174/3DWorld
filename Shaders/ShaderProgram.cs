@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
 using OpenTK;
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.OpenGL;
 
 namespace Shaders
 {
     public abstract class ShaderProgram
     {
-        private readonly int programID;
-        private readonly int vertexShaderID;
-        private readonly int fragmentShaderID;
+        private int programID;
+        private int vertexShaderID;
+        private int fragmentShaderID;
 
-        public ShaderProgram(string vertexFile, string fragmentFile)
+        protected virtual void Initialize(string vertexFile, string fragmentFile)
         {
             vertexShaderID = LoadShader(vertexFile, ShaderType.VertexShader);
             fragmentShaderID = LoadShader(fragmentFile, ShaderType.FragmentShader);

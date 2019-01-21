@@ -5,15 +5,20 @@ namespace Shaders
 {
     public class EntityShader : BaseShader
     {
-        private static string VertexFile = Constants.BaseShaderFolder + "VertexShader.glsl";
-        private static string FragmentFile = Constants.BaseShaderFolder + "FragmentShader.glsl";
-
         private int location_useFakeLighting;
         private int location_numberOfRows;
         private int location_offset;
 
-        public EntityShader() : base(VertexFile, FragmentFile)
+        public EntityShader(ShadingType shadingType)
         {
+            if (shadingType == ShadingType.Phong)
+            {
+                Initialize(Constants.BasePhongShaderFolder + Constants.EntityVertexShader, Constants.BasePhongShaderFolder + Constants.EntityFragmentShader);
+            }
+            else if (shadingType == ShadingType.Flat)
+            {
+                Initialize(Constants.BaseFlatShaderFolder + Constants.EntityVertexShader, Constants.BaseFlatShaderFolder + Constants.EntityFragmentShader);
+            }
         }
 
         protected override void GetAllUniformLocations()

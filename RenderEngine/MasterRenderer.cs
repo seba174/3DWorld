@@ -33,13 +33,13 @@ namespace RenderEngine
         private readonly Dictionary<TexturedModel, List<Entity>> entities = new Dictionary<TexturedModel, List<Entity>>();
         private readonly List<Terrain> terrains = new List<Terrain>();
 
-        public MasterRenderer(ScreenHelper screen, Loader loader)
+        public MasterRenderer(ScreenHelper screen, Loader loader, ShadingType shadingType)
         {
             this.screen = screen;
             EnableCulling();
 
-            shader = new EntityShader();
-            terrainShader = new TerrainShader();
+            shader = new EntityShader(shadingType);
+            terrainShader = new TerrainShader(shadingType);
 
             CreateProjectionMatrix();
 

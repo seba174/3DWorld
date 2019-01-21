@@ -36,15 +36,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="FragmentShader.glsl" />
-    <None Include="TerrainFragmentShader.glsl" />
-    <None Include="TerrainVertexShader.glsl" />
-    <None Include="VertexShader.glsl" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="BaseShader.cs" />
     <Compile Include="ShaderProgram.cs" />
     <Compile Include="EntityShader.cs" />
+    <Compile Include="ShadingType.cs" />
     <Compile Include="TerrainShader.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -21,11 +21,6 @@ namespace Shaders
         private int[] location_coneDirection;
         private int[] location_angle;
 
-
-        public BaseShader(string vertexFile, string fragmentFile) : base(vertexFile, fragmentFile)
-        {
-        }
-
         protected override void BindAttributes()
         {
             BindAttribute(0, "position");

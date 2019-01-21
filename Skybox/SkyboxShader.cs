@@ -8,9 +8,6 @@ namespace Skybox
 {
     public class SkyboxShader : ShaderProgram
     {
-        private const string VertexFile = Constants.SkyboxShaderFolder + "skyboxVertexShader.glsl";
-        private const string FragmentFile = Constants.SkyboxShaderFolder + "skyboxFragmentShader.glsl";
-
         private const float RotationSpeed = 0.001f;
 
         private int location_projectionMatrix;
@@ -23,8 +20,8 @@ namespace Skybox
         private float rotation = 0;
 
         public SkyboxShader()
-            : base(VertexFile, FragmentFile)
         {
+            Initialize(Constants.SkyboxShaderFolder + Constants.SkyboxVertexShader, Constants.SkyboxShaderFolder + Constants.SkyboxFragmentShader);
         }
 
         protected override void BindAttributes()

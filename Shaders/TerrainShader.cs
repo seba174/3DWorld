@@ -4,17 +4,22 @@ namespace Shaders
 {
     public class TerrainShader : BaseShader
     {
-        private const string VertexFile = Constants.BaseShaderFolder + "TerrainVertexShader.glsl";
-        private const string FragmentFile = Constants.BaseShaderFolder + "TerrainFragmentShader.glsl";
-
         private int location_backgroundTexture;
         private int location_rTexture;
         private int location_gTexture;
         private int location_bTexture;
         private int location_blendMap;
 
-        public TerrainShader() : base(VertexFile, FragmentFile)
+        public TerrainShader(ShadingType shadingType)
         {
+            if (shadingType == ShadingType.Phong)
+            {
+                Initialize(Constants.BasePhongShaderFolder + Constants.TerrainVertexShader, Constants.BasePhongShaderFolder + Constants.TerrainFragmentShader);
+            }
+            else if (shadingType == ShadingType.Flat)
+            {
+                Initialize(Constants.BaseFlatShaderFolder + Constants.TerrainVertexShader, Constants.BaseFlatShaderFolder + Constants.TerrainFragmentShader);
+            }
         }
 
         protected override void BindAttributes()
