@@ -9,6 +9,8 @@ namespace InputHandling
         public bool RightButtonPressed { get; private set; }
         public int MoveXDelta { get; private set; }
         public int MoveYDelta { get; private set; }
+        public int X { get; private set; }
+        public int Y { get; private set; }
 
         public void UpdateMouseButtons(MouseButtonEventArgs e)
         {
@@ -18,6 +20,8 @@ namespace InputHandling
 
         public void UpdateMouseMove(MouseMoveEventArgs e)
         {
+            X = e.X;
+            Y = e.Y;
             MoveXDelta = e.XDelta;
             MoveYDelta = e.YDelta;
         }

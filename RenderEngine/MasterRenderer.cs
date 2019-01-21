@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities;
+using InputHandling;
 using Models;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
@@ -16,27 +17,25 @@ namespace RenderEngine
         private const float FOV = 70;
         private const float NEAR_PLANE = 0.1f;
         private const float FAR_PLANE = 1000;
-        private static Vector3 FogColour = new Vector3(0.5444f, 0.62f, 0.69f);
+        private static readonly Vector3 FogColour = new Vector3(0.5444f, 0.62f, 0.69f);
 
-        private readonly int height, width;
+        private readonly ScreenHelper screen;
 
-        private EntityShader shader;
-        private EntityRenderer renderer;
+        private readonly EntityShader shader;
+        private readonly EntityRenderer renderer;
 
-        private TerrainShader terrainShader;
-        private TerrainRenderer terrainRenderer;
+        private readonly TerrainShader terrainShader;
+        private readonly TerrainRenderer terrainRenderer;
 
-        private SkyboxRenderer skyboxRenderer;
+        private readonly SkyboxRenderer skyboxRenderer;
 
-        private Matrix4 projectionMatrix;
-        private Dictionary<TexturedModel, List<Entity>> entities = new Dictionary<TexturedModel, List<Entity>>();
-        private List<Terrain> terrains = new List<Terrain>();
+        public Matrix4 ProjectionMatrix { get; private set; }
+        private readonly Dictionary<TexturedModel, List<Entity>> entities = new Dictionary<TexturedModel, List<Entity>>();
+        private readonly List<Terrain> terrains = new List<Terrain>();
 
-        public MasterRenderer(int height, int width, Loader loader)
+        public MasterRenderer(ScreenHelper screen, Loader loader)
         {
-            this.height = height;
-            this.width = width;
-
+            this.screen = screen;
             EnableCulling();
 
             shader = new EntityShader();
@@ -44,9 +43,9 @@ namespace RenderEngine
 
             CreateProjectionMatrix();
 
-            renderer = new EntityRenderer(shader, projectionMatrix);
-            terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-            skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+            renderer = new EntityRenderer(shader, ProjectionMatrix);
+            terrainRenderer = new TerrainRenderer(terrainShader, ProjectionMatrix);
+            skyboxRenderer = new SkyboxRenderer(loader, ProjectionMatrix);
         }
 
         public void Render(List<Light> lights, BaseCamera camera, DayTime dayTime)
@@ -120,12 +119,12 @@ namespace RenderEngine
 
         private void CreateProjectionMatrix()
         {
-            float aspectRatio = width / (float)height;
+            float aspectRatio = screen.Width / (float)screen.Height;
             float y_scale = (float)(1f / Math.Tan(MathHelper.DegreesToRadians(FOV / 2f)) * aspectRatio);
             float x_scale = y_scale / aspectRatio;
             float frustum_lenght = FAR_PLANE - NEAR_PLANE;
 
-            projectionMatrix = new Matrix4
+            ProjectionMatrix = new Matrix4
             {
                 M11 = x_scale,
                 M22 = y_scale,

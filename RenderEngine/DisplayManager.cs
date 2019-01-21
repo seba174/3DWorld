@@ -20,6 +20,8 @@ namespace RenderEngine
         private Stopwatch stopwatch = new Stopwatch();
         private KeyboardHelper keyboard = new KeyboardHelper();
         private MouseHelper mouse = new MouseHelper();
+        private ScreenHelper screen = new ScreenHelper();
+        private MousePicker mousePicker;
         private DayTime dayTime = new DayTime();
 
         private Loader loader = new Loader();
@@ -39,12 +41,17 @@ namespace RenderEngine
             : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D",
                   GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
         {
+            screen = new ScreenHelper()
+            {
+                Width = Width,
+                Height = Height
+            };
             GL.Enable(EnableCap.Multisample);
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            renderer = new MasterRenderer(Height, Width, loader);
+            renderer = new MasterRenderer(screen, loader);
 
             TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy"));
             TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud"));
@@ -103,6 +110,8 @@ namespace RenderEngine
             camera = new Camera(keyboard, mouse);
             camera = new ThirdPersonCamera(keyboard, mouse, player);
 
+            mousePicker = new MousePicker(renderer.ProjectionMatrix, mouse, screen);
+
             stopwatch.Start();
         }
 
@@ -118,6 +127,8 @@ namespace RenderEngine
             var terrainWherePlayerStands = terrains.Where(t => t.IsOnTerrain(player.Position)).FirstOrDefault();
             player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, dayTime.LastFrameTime);
             camera.Move();
+            mousePicker.Update(camera);
+            Console.WriteLine(mousePicker.CurrentRay);
 
             mouse.ResetDeltas();
         }
@@ -153,6 +164,9 @@ namespace RenderEngine
 
         protected override void OnResize(EventArgs e)
         {
+            screen.Height = Height;
+            screen.Width = Width;
+
             GL.Viewport(0, 0, Width, Height);
         }
 

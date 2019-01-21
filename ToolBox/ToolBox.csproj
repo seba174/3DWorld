@@ -52,6 +52,7 @@
     <Compile Include="Loader.cs" />
     <Compile Include="Maths.cs" />
     <Compile Include="ModelData.cs" />
+    <Compile Include="MousePicker.cs" />
     <Compile Include="OBJLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vertex.cs" />
@@ -68,6 +69,10 @@
     <ProjectReference Include="..\Entities\Entities.csproj">
       <Project>{E586903D-5E3F-4A07-8A5E-57F306F712AD}</Project>
       <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InputHandling\InputHandling.csproj">
+      <Project>{926F3009-5C28-409F-936F-C499D0962326}</Project>
+      <Name>InputHandling</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{CB5C32B0-37F3-40EA-83CB-2191C48DC44E}</Project>
