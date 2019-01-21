@@ -76,10 +76,11 @@ namespace Skybox
             shader.Stop();
         }
 
-        public void Render(BaseCamera camera)
+        public void Render(BaseCamera camera, Vector3 fogColour, long frameTime)
         {
             shader.Start();
-            shader.LoadViewMatrix(camera);
+            shader.LoadViewMatrix(camera, frameTime);
+            shader.LoadFogColour(fogColour);
             GL.BindVertexArray(cube.VaoID);
             GL.EnableVertexAttribArray(0);
             GL.ActiveTexture(TextureUnit.Texture0);

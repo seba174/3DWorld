@@ -6,7 +6,7 @@ namespace Entities
 {
     public class ThirdPersonCamera : BaseCamera
     {
-        private float distanceFromEntity = 30;
+        private float distanceFromEntity = 25;
         private float angleAroundEntity = 0;
 
         private readonly Entity entity;
@@ -15,7 +15,7 @@ namespace Entities
             : base(keyboard, mouse)
         {
             this.entity = entity;
-            Pitch = 15;
+            Pitch = 10;
         }
 
         public override void Move()

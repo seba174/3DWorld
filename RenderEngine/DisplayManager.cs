@@ -18,6 +18,7 @@ namespace RenderEngine
     public class DisplayManager : GameWindow
     {
         private Stopwatch stopwatch = new Stopwatch();
+        private long lastFrameTimeInMiliseconds = -1;
         private KeyboardHelper keyboard = new KeyboardHelper();
         private MouseHelper mouse = new MouseHelper();
 
@@ -121,11 +122,11 @@ namespace RenderEngine
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            long delta = stopwatch.ElapsedMilliseconds;
+            lastFrameTimeInMiliseconds = stopwatch.ElapsedMilliseconds > 0 ? stopwatch.ElapsedMilliseconds : lastFrameTimeInMiliseconds;
             stopwatch.Restart();
 
             var terrainWherePlayerStands = terrains.Where(t => t.IsOnTerrain(player.Position)).FirstOrDefault();
-            player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, delta);
+            player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, lastFrameTimeInMiliseconds);
             camera.Move();
 
             mouse.ResetDeltas();
@@ -145,7 +146,7 @@ namespace RenderEngine
                 renderer.ProcessEntity(entity);
             }
 
-            renderer.Render(lights, camera);
+            renderer.Render(lights, camera, lastFrameTimeInMiliseconds);
 
             SwapBuffers();
         }

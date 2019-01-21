@@ -7,12 +7,10 @@ namespace Entities
 {
     public class Player : Entity
     {
-        private const float RUN_SPEED = 0.058f;
-        private const float TURN_SPEED = 0.16f;
+        private const float RUN_SPEED = 0.03f;
+        private const float TURN_SPEED = 0.07f;
         private const float GRAVITY = -0.0005f;
-        private const float JUMP_POWER = 0.2f;
-
-        private const float TERRAIN_HEIGHT = 0;
+        private const float JUMP_POWER = 0.35f;
 
         private float currentSpeed = 0;
         private float currentTurnSpeed = 0;

@@ -16,7 +16,7 @@ namespace RenderEngine
         private const float FOV = 70;
         private const float NEAR_PLANE = 0.1f;
         private const float FAR_PLANE = 1000;
-        private static Vector3 SkyColour = new Vector3(0.5f, 0.5f, 0.5f);
+        private static Vector3 FogColour = new Vector3(0.5444f, 0.62f, 0.69f);
 
         private readonly int height, width;
 
@@ -49,25 +49,25 @@ namespace RenderEngine
             skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
         }
 
-        public void Render(List<Light> lights, BaseCamera camera)
+        public void Render(List<Light> lights, BaseCamera camera, long frameTime)
         {
             Prepare();
 
             shader.Start();
-            shader.LoadSkyColour(SkyColour);
+            shader.LoadSkyColour(FogColour);
             shader.LoadLights(lights);
             shader.LoadViewMatrix(camera);
             renderer.Render(entities);
             shader.Stop();
 
             terrainShader.Start();
-            terrainShader.LoadSkyColour(SkyColour);
+            terrainShader.LoadSkyColour(FogColour);
             terrainShader.LoadLights(lights);
             terrainShader.LoadViewMatrix(camera);
             terrainRenderer.Render(terrains);
             terrainShader.Stop();
 
-            skyboxRenderer.Render(camera);
+            skyboxRenderer.Render(camera, FogColour, frameTime);
 
             entities.Clear();
             terrains.Clear();
@@ -108,7 +108,7 @@ namespace RenderEngine
         {
             GL.Enable(EnableCap.DepthTest);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(SkyColour.X, SkyColour.Y, SkyColour.Z, 1);
+            GL.ClearColor(FogColour.X, FogColour.Y, FogColour.Z, 1);
         }
 
         public void CleanUp()
