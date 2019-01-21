@@ -165,10 +165,10 @@ namespace ToolBox
                 Bitmap image = new Bitmap(Constants.BaseResourcesPath + textureFiles[i] + Constants.TextureFileExtension);
 
                 BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
-                    ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
                 GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, PixelInternalFormat.Rgba, data.Width, data.Height,
-                    0, PixelFormat.Rgba, PixelType.UnsignedByte, data.Scan0);
+                    0, PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
 
                 image.UnlockBits(data);
             }
