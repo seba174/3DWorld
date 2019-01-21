@@ -157,18 +157,20 @@ namespace RenderEngine
                     break;
                 case Key.M:
                     {
-                        if(shadingType == ShadingType.Flat)
+                        if (shadingType == ShadingType.Flat)
+                        {
+                            shadingType = ShadingType.Gouraud;
+                        }
+                        else if (shadingType == ShadingType.Gouraud)
                         {
                             shadingType = ShadingType.Phong;
-                            renderer.CleanUp();
-                            renderer = new MasterRenderer(screen, loader, shadingType);
                         }
-                        else if(shadingType == ShadingType.Phong)
+                        else if (shadingType == ShadingType.Phong)
                         {
                             shadingType = ShadingType.Flat;
-                            renderer.CleanUp();
-                            renderer = new MasterRenderer(screen, loader, shadingType);
                         }
+                        renderer.CleanUp();
+                        renderer = new MasterRenderer(screen, loader, shadingType);
                     }
                     break;
             }

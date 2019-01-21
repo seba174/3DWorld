@@ -19,6 +19,10 @@ namespace Shaders
             {
                 Initialize(Constants.BaseFlatShaderFolder + Constants.EntityVertexShader, Constants.BaseFlatShaderFolder + Constants.EntityFragmentShader);
             }
+            else if (shadingType == ShadingType.Gouraud)
+            {
+                Initialize(Constants.BaseGouraudShaderFolder + Constants.EntityVertexShader, Constants.BaseGouraudShaderFolder + Constants.EntityFragmentShader);
+            }
         }
 
         protected override void GetAllUniformLocations()

@@ -4,6 +4,7 @@ namespace Shaders
     public enum ShadingType
     {
         Flat,
-        Phong
+        Phong,
+        Gouraud
     }
 }

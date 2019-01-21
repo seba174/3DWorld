@@ -5,6 +5,7 @@ namespace Utilities
     {
         public const string BasePhongShaderFolder = "../../../Shaders/Phong/";
         public const string BaseFlatShaderFolder = "../../../Shaders/Flat/";
+        public const string BaseGouraudShaderFolder = "../../../Shaders/Gouraud/";
 
         public const string EntityVertexShader = "VertexShader.glsl";
         public const string EntityFragmentShader = "FragmentShader.glsl";
