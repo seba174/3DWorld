@@ -13,6 +13,9 @@ namespace Entities
             set => colour = value;
         }
         public Vector3 Attenuation { get; set; } = new Vector3(1, 0, 0);
+        public float AdditionalAngle { get; set; }
+        public Vector3 ConeDirection { get; set; }
+        public Vector2 Angles { get; set; } = new Vector2(-1, -1);
         public bool Enabled { get; set; } = true;
 
         public Light(Vector3 position, Vector3 colour)

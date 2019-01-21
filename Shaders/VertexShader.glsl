@@ -1,5 +1,5 @@
 ﻿#version 450 core
-#define NR_POINT_LIGHTS 11
+#define NR_POINT_LIGHTS 12
 
 in vec3 position;
 in vec2 textureCoordinates;

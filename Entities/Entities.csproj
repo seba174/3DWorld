@@ -47,6 +47,7 @@
     <Compile Include="BaseCamera.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="FirstPersonCamera.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

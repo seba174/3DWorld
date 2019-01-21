@@ -6,10 +6,10 @@ namespace Entities
 {
     public class ThirdPersonCamera : BaseCamera
     {
-        private float distanceFromEntity = 25;
-        private float angleAroundEntity = 0;
+        protected float distanceFromEntity = 25;
+        protected float angleAroundEntity = 0;
 
-        private readonly Entity entity;
+        protected readonly Entity entity;
 
         public ThirdPersonCamera(KeyboardHelper keyboard, MouseHelper mouse, Entity entity)
             : base(keyboard, mouse)
@@ -31,13 +31,13 @@ namespace Entities
             Yaw = 180 - (entity.Rotation.Y + angleAroundEntity);
         }
 
-        private void CalculateZoom()
+        protected void CalculateZoom()
         {
             float zoomLevel = Mouse.WheelDelta * 0.5f;
             distanceFromEntity -= zoomLevel;
         }
 
-        private void CalculatePitch()
+        protected void CalculatePitch()
         {
             if (Mouse.RightButtonPressed)
             {
@@ -46,7 +46,7 @@ namespace Entities
             }
         }
 
-        private void CalculateAngleAroundEntity()
+        protected void CalculateAngleAroundEntity()
         {
             if (Mouse.LeftButtonPressed)
             {
@@ -55,23 +55,29 @@ namespace Entities
             }
         }
 
-        private float CalculateHorizontalDistance()
+        protected float CalculateHorizontalDistance()
         {
             return (float)(distanceFromEntity * Math.Cos(MathHelper.DegreesToRadians(Pitch)));
         }
 
-        private float CalculateVerticalDistance()
+        protected float CalculateVerticalDistance()
         {
             return (float)(distanceFromEntity * Math.Sin(MathHelper.DegreesToRadians(Pitch)));
         }
 
-        private void CalculateCameraPosition(float horizontalDistance, float verticalDistance)
+        protected void CalculateCameraPosition(float horizontalDistance, float verticalDistance)
         {
             float theta = entity.Rotation.Y + angleAroundEntity;
             float offsetX = (float)(horizontalDistance * Math.Sin(MathHelper.DegreesToRadians(theta)));
             float offsetZ = (float)(horizontalDistance * Math.Cos(MathHelper.DegreesToRadians(theta)));
 
-            Position = entity.Position + new Vector3(-offsetX, entity.Height * 3 / 4 + verticalDistance, -offsetZ);
+            float factor = 0.75f;
+            if (distanceFromEntity <= 0)
+            {
+                factor = 1;
+            }
+
+            Position = entity.Position + new Vector3(-offsetX, entity.Height * factor + verticalDistance, -offsetZ);
         }
     }
 }

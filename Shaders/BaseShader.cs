@@ -7,7 +7,7 @@ namespace Shaders
 {
     public class BaseShader : ShaderProgram
     {
-        protected const int MaxLights = 11;
+        protected const int MaxLights = 12;
 
         private int location_transformationMatrix;
         private int location_projectionMatrix;
@@ -18,6 +18,8 @@ namespace Shaders
         private int location_reflectivity;
         private int location_skyColour;
         private int[] location_attenuation;
+        private int[] location_coneDirection;
+        private int[] location_angle;
 
 
         public BaseShader(string vertexFile, string fragmentFile) : base(vertexFile, fragmentFile)
@@ -43,11 +45,15 @@ namespace Shaders
             location_lightPosition = new int[MaxLights];
             location_lightColour = new int[MaxLights];
             location_attenuation = new int[MaxLights];
+            location_coneDirection = new int[MaxLights];
+            location_angle = new int[MaxLights];
             for (int i = 0; i < MaxLights; i++)
             {
                 location_lightPosition[i] = GetUniformLocation("lightPosition[" + i + "]");
                 location_lightColour[i] = GetUniformLocation("lightColour[" + i + "]");
                 location_attenuation[i] = GetUniformLocation("attenuation[" + i + "]");
+                location_coneDirection[i] = GetUniformLocation("coneDirection[" + i + "]");
+                location_angle[i] = GetUniformLocation("angle[" + i + "]");
             }
         }
 
@@ -81,12 +87,16 @@ namespace Shaders
                     LoadVector(location_lightPosition[i], lights[i].Position);
                     LoadVector(location_lightColour[i], lights[i].Colour);
                     LoadVector(location_attenuation[i], lights[i].Attenuation);
+                    LoadVector(location_coneDirection[i], lights[i].ConeDirection);
+                    LoadVector(location_angle[i], lights[i].Angles);
                 }
                 else
                 {
                     LoadVector(location_lightPosition[i], new Vector3(0, 0, 0));
                     LoadVector(location_lightColour[i], new Vector3(0, 0, 0));
                     LoadVector(location_attenuation[i], new Vector3(1, 0, 0));
+                    LoadVector(location_coneDirection[i], new Vector3(0, 0, 0));
+                    LoadVector(location_angle[i], new Vector2(-1, 0));
                 }
             }
         }

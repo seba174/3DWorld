@@ -34,7 +34,8 @@ namespace RenderEngine
         private Player player;
 
         private Light Sun => lights.First();
-        private IEnumerable<Light> Lamps => lights.Skip(1);
+        private IEnumerable<Light> Lamps => lights.Skip(1).Take(lights.Count - 2);
+        private Light FlashLight => lights[lights.Count - 1];
 
 
         public DisplayManager()
@@ -105,10 +106,15 @@ namespace RenderEngine
                 }
             }
 
+            lights.Add(new Light(new Vector3(0), new Vector3(2, 2, 2), new Vector3(1, 0.01f, 0.002f))
+            {
+                Angles = new Vector2((float)Math.Cos(MathHelper.DegreesToRadians(20)), (float)Math.Cos(MathHelper.DegreesToRadians(30)))
+            });
+
             player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 180, 0), 0.5f);
 
             camera = new Camera(keyboard, mouse);
-            camera = new ThirdPersonCamera(keyboard, mouse, player);
+            camera = new FirstPersonCamera(keyboard, mouse, player);
 
             mousePicker = new MousePicker(renderer.ProjectionMatrix, mouse, screen);
 
@@ -127,6 +133,7 @@ namespace RenderEngine
             var terrainWherePlayerStands = terrains.Where(t => t.IsOnTerrain(player.Position)).FirstOrDefault();
             player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, dayTime.LastFrameTime);
             camera.Move();
+            UpdateFlashLight();
             //mousePicker.Update(camera);
             //Console.WriteLine(mousePicker.CurrentRay);
 
@@ -172,6 +179,32 @@ namespace RenderEngine
 
         protected override void OnKeyDown(KeyboardKeyEventArgs e)
         {
+            switch (e.Key)
+            {
+                case Key.F:
+                    FlashLight.Enabled = !FlashLight.Enabled; break;
+                case Key.C:
+                    {
+                        if (camera is FirstPersonCamera)
+                        {
+                            camera = new ThirdPersonCamera(keyboard, mouse, player);
+                        }
+                        else if (camera is ThirdPersonCamera)
+                        {
+                            camera = new Camera(keyboard, mouse)
+                            {
+                                Position = player.Position + new Vector3(0, player.Height * 10, 0),
+                                Pitch = 40,
+                                Yaw = 180 - player.Rotation.Y
+                            };
+                        }
+                        else
+                        {
+                            camera = new FirstPersonCamera(keyboard, mouse, player);
+                        }
+                    }
+                    break;
+            }
             keyboard.Update(e, true);
         }
 
@@ -217,6 +250,33 @@ namespace RenderEngine
 
             entities.Add(lamp);
             lights.Add(lampLight);
+        }
+
+        private void UpdateFlashLight()
+        {
+            float flashLightMaxAdditionalAngle = 25;
+            float angleSpeedUpdate = 0.02f;
+
+            FlashLight.Position = player.Position + new Vector3(0, player.Height / 2, 0);
+            if (keyboard.P_Pressed && FlashLight.Enabled)
+            {
+                FlashLight.AdditionalAngle += angleSpeedUpdate * dayTime.LastFrameTime;
+                if (FlashLight.AdditionalAngle > flashLightMaxAdditionalAngle)
+                {
+                    FlashLight.AdditionalAngle = flashLightMaxAdditionalAngle;
+                }
+            }
+            else if (keyboard.O_Pressed && FlashLight.Enabled)
+            {
+                FlashLight.AdditionalAngle -= angleSpeedUpdate * dayTime.LastFrameTime;
+                if (FlashLight.AdditionalAngle < -flashLightMaxAdditionalAngle)
+                {
+                    FlashLight.AdditionalAngle = -flashLightMaxAdditionalAngle;
+                }
+            }
+
+            var m = Matrix3.CreateRotationY(MathHelper.DegreesToRadians(-player.Rotation.Y + FlashLight.AdditionalAngle));
+            FlashLight.ConeDirection = m * new Vector3(0, 0.2f, -1);
         }
 
         private void UpdateLightsBasedOnDayTime()

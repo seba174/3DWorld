@@ -1,5 +1,5 @@
 ﻿#version 450 core
-#define NR_POINT_LIGHTS 11
+#define NR_POINT_LIGHTS 12
 
 in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
@@ -17,9 +17,12 @@ uniform sampler2D blendMap;
 
 uniform vec3 lightColour[NR_POINT_LIGHTS];
 uniform vec3 attenuation[NR_POINT_LIGHTS];
+uniform vec3 coneDirection[NR_POINT_LIGHTS];
+uniform vec2 angle[NR_POINT_LIGHTS];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
+
 
 void main(void) {
 
@@ -46,23 +49,25 @@ void main(void) {
 
 		vec3 unitLightVector = normalize(toLightVector[i]);
 
-		float outerConeAngle = 40.0;
-		float coneAngle = 30.0;
-		vec3 coneDirection = vec3(-0.5, -1.0, 0.0);
-		float lightToSurfaceAngle = degrees(acos(dot(-unitLightVector, normalize(coneDirection))));
-		if (lightToSurfaceAngle > outerConeAngle && i > 0)
-		{
-			continue;
-		}
-
 		float intensity = 1.0;
-		float eps = outerConeAngle - coneAngle;
-		if (lightToSurfaceAngle >= coneAngle && lightToSurfaceAngle < outerConeAngle)
+		float coneAngle = angle[i].x;
+		float outerConeAngle = angle[i].y;
+
+		// spotlight
+		if (coneAngle >= 0)
 		{
+			float lightToSurfaceAngle = dot(unitLightVector, normalize(coneDirection[i]));
+			if (lightToSurfaceAngle < outerConeAngle)
+			{
+				continue;
+			}
 
-			intensity = clamp((-lightToSurfaceAngle + outerConeAngle) / eps, 0.0, 1.0);
+			if (lightToSurfaceAngle < coneAngle)
+			{
+				float eps = coneAngle - outerConeAngle;
+				intensity = clamp((lightToSurfaceAngle - outerConeAngle) / eps, 0.0, 1.0);
+			}
 		}
-
 
 		float nDot1 = dot(unitNormal, unitLightVector);
 		float brightness = max(nDot1, 0.0);
@@ -81,3 +86,4 @@ void main(void) {
 	out_Color = vec4(totalDiffuse, 1.0) * totalColour + vec4(totalSpecular, 1.0);
 	out_Color = mix(vec4(skyColour, 1.0), out_Color, visibility);
 }
+

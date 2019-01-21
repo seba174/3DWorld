@@ -8,6 +8,8 @@ namespace InputHandling
         public bool A_Pressed { get; private set; }
         public bool S_Pressed { get; private set; }
         public bool D_Pressed { get; private set; }
+        public bool P_Pressed { get; private set; }
+        public bool O_Pressed { get; private set; }
         public bool UpArrowPressed { get; private set; }
         public bool LeftArrowPressed { get; private set; }
         public bool RightArrowPressed { get; private set; }
@@ -26,6 +28,10 @@ namespace InputHandling
                     S_Pressed = pressed; break;
                 case Key.D:
                     D_Pressed = pressed; break;
+                case Key.P:
+                    P_Pressed = pressed; break;
+                case Key.O:
+                    O_Pressed = pressed; break;
                 case Key.Up:
                     UpArrowPressed = pressed; break;
                 case Key.Left:
