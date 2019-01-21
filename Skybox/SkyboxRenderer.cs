@@ -73,7 +73,6 @@ namespace Skybox
             Constants.SkyboxFolderInResources + "nightFront"
         };
 
-        private float time = 0;
         private RawModel cube;
         private readonly int dayTexture;
         private readonly int nightTexture;
@@ -90,17 +89,17 @@ namespace Skybox
             shader.Stop();
         }
 
-        public void Render(BaseCamera camera, Vector3 fogColour, long frameTime)
+        public void Render(BaseCamera camera, Vector3 fogColour, DayTime dayTime)
         {
             shader.Start();
 
-            shader.LoadViewMatrix(camera, frameTime);
+            shader.LoadViewMatrix(camera, dayTime.LastFrameTime);
             shader.LoadFogColour(fogColour);
 
             GL.BindVertexArray(cube.VaoID);
             GL.EnableVertexAttribArray(0);
 
-            BindTextures(frameTime);
+            BindTextures(dayTime);
             GL.DrawArrays(PrimitiveType.Triangles, 0, cube.VertexCount);
 
             GL.DisableVertexAttribArray(0);
@@ -109,42 +108,40 @@ namespace Skybox
             shader.Stop();
         }
 
-        public void BindTextures(long frameTime)
+        public void BindTextures(DayTime dayTime)
         {
-            time = (time + frameTime / 2) % 24000;
-
-            float blendFactor;
-            int dawnTime = 5000, morning = 8000, evening = 21000, night = 24000, texture1, texture2;
-            if (time >= 0 && time < dawnTime)
-            {
-                texture1 = nightTexture;
-                texture2 = nightTexture;
-                blendFactor = 1;
-            }
-            else if (time >= dawnTime && time < morning)
+            int texture1, texture2;
+            if (dayTime.TimeOfDay == TimeOfDay.Dawn)
             {
                 texture1 = nightTexture;
                 texture2 = dayTexture;
-                blendFactor = (time - dawnTime) / (morning - dawnTime);
             }
-            else if (time >= morning && time <= evening)
+            else if (dayTime.TimeOfDay == TimeOfDay.Morning || dayTime.TimeOfDay == TimeOfDay.Noon)
             {
                 texture1 = dayTexture;
                 texture2 = dayTexture;
-                blendFactor = (time - morning) / (evening - morning);
+            }
+            else if (dayTime.TimeOfDay == TimeOfDay.Noon)
+            {
+                texture1 = dayTexture;
+                texture2 = dayTexture;
+            }
+            else if(dayTime.TimeOfDay == TimeOfDay.Evening)
+            {
+                texture1 = dayTexture;
+                texture2 = nightTexture;
             }
             else
             {
-                texture1 = dayTexture;
+                texture1 = nightTexture;
                 texture2 = nightTexture;
-                blendFactor = (time - evening) / (night - evening);
             }
 
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.TextureCubeMap, texture1);
             GL.ActiveTexture(TextureUnit.Texture1);
             GL.BindTexture(TextureTarget.TextureCubeMap, texture2);
-            shader.LoadBlendFactor(blendFactor);
+            shader.LoadBlendFactor(dayTime.TimeOfDayFactor);
         }
 
         public void CleanUp()

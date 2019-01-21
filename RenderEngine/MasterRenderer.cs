@@ -49,7 +49,7 @@ namespace RenderEngine
             skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
         }
 
-        public void Render(List<Light> lights, BaseCamera camera, long frameTime)
+        public void Render(List<Light> lights, BaseCamera camera, DayTime dayTime)
         {
             Prepare();
 
@@ -67,7 +67,7 @@ namespace RenderEngine
             terrainRenderer.Render(terrains);
             terrainShader.Stop();
 
-            skyboxRenderer.Render(camera, FogColour, frameTime);
+            skyboxRenderer.Render(camera, FogColour, dayTime);
 
             entities.Clear();
             terrains.Clear();

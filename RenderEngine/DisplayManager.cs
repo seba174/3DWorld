@@ -18,9 +18,9 @@ namespace RenderEngine
     public class DisplayManager : GameWindow
     {
         private Stopwatch stopwatch = new Stopwatch();
-        private long lastFrameTimeInMiliseconds = -1;
         private KeyboardHelper keyboard = new KeyboardHelper();
         private MouseHelper mouse = new MouseHelper();
+        private DayTime dayTime = new DayTime();
 
         private Loader loader = new Loader();
         private BaseCamera camera;
@@ -30,6 +30,10 @@ namespace RenderEngine
         private List<Light> lights;
         private MasterRenderer renderer;
         private Player player;
+
+        private Light Sun => lights.First();
+        private IEnumerable<Light> Lamps => lights.Skip(1);
+
 
         public DisplayManager()
             : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D",
@@ -84,14 +88,14 @@ namespace RenderEngine
                 {
                     CreateLamp(new Vector3(x, y, z), new Vector3(3.5f, 2, 2), lamp);
                 }
-                else if(i % 2 == 0)
+                else if (i % 2 == 0)
                 {
                     entities.Add(new Entity(tree, new Vector3(x, y, z), new Vector3(0, 0, 0), 3));
                 }
                 else
                 {
                     entities.Add(new Entity(fernTextureAtlas, rdn.Next() % 4, new Vector3(x, y, z), new Vector3(0, 0, 0), 0.6f));
-                }           
+                }
             }
 
             player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 180, 0), 0.5f);
@@ -102,31 +106,17 @@ namespace RenderEngine
             stopwatch.Start();
         }
 
-        private void CreateLamp(Vector3 position, Vector3 lightCoulour, TexturedModel lampModel)
-        {
-            float scale = 1.0f;
-            float lightSourceHeightFactor = 0.97f;
-            Vector3 lampAttenuation = new Vector3(1, 0.01f, 0.002f);
-
-            lampModel.Texture.UseFakeLightning = true;
-
-            Entity lamp = new Entity(lampModel, position, new Vector3(0, 0, 0), scale);
-
-            float lightSourceHeight = position.Y + lightSourceHeightFactor * lamp.Height * scale;
-            Light lampLight = new Light(new Vector3(position.X, lightSourceHeight, position.Z),
-                lightCoulour, lampAttenuation);
-
-            entities.Add(lamp);
-            lights.Add(lampLight);
-        }
-
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            lastFrameTimeInMiliseconds = stopwatch.ElapsedMilliseconds > 0 ? stopwatch.ElapsedMilliseconds : lastFrameTimeInMiliseconds;
+            if (stopwatch.ElapsedMilliseconds > 0)
+            {
+                dayTime.Update(stopwatch.ElapsedMilliseconds);
+                UpdateLightsBasedOnDayTime();
+            }
             stopwatch.Restart();
 
             var terrainWherePlayerStands = terrains.Where(t => t.IsOnTerrain(player.Position)).FirstOrDefault();
-            player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, lastFrameTimeInMiliseconds);
+            player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, dayTime.LastFrameTime);
             camera.Move();
 
             mouse.ResetDeltas();
@@ -146,7 +136,7 @@ namespace RenderEngine
                 renderer.ProcessEntity(entity);
             }
 
-            renderer.Render(lights, camera, lastFrameTimeInMiliseconds);
+            renderer.Render(lights, camera, dayTime);
 
             SwapBuffers();
         }
@@ -159,6 +149,7 @@ namespace RenderEngine
             base.OnUnload(e);
         }
 
+        #region Events
 
         protected override void OnResize(EventArgs e)
         {
@@ -192,6 +183,57 @@ namespace RenderEngine
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             mouse.UpdateMouseButtons(e);
+        }
+
+        #endregion
+
+        private void CreateLamp(Vector3 position, Vector3 lightCoulour, TexturedModel lampModel)
+        {
+            float scale = 1.0f;
+            float lightSourceHeightFactor = 0.97f;
+            Vector3 lampAttenuation = new Vector3(1, 0.01f, 0.002f);
+
+            lampModel.Texture.UseFakeLightning = true;
+
+            Entity lamp = new Entity(lampModel, position, new Vector3(0, 0, 0), scale);
+
+            float lightSourceHeight = position.Y + lightSourceHeightFactor * lamp.Height * scale;
+            Light lampLight = new Light(new Vector3(position.X, lightSourceHeight, position.Z),
+                lightCoulour, lampAttenuation);
+
+            entities.Add(lamp);
+            lights.Add(lampLight);
+        }
+
+        private void UpdateLightsBasedOnDayTime()
+        {
+            float factor = dayTime.TimeOfDayFactor;
+            if (dayTime.TimeOfDay == TimeOfDay.Dawn)
+            {
+                Sun.Colour = new Vector3(factor, factor, factor);
+
+            }
+            else if (dayTime.TimeOfDay == TimeOfDay.Morning)
+            {
+                foreach (var light in Lamps)
+                {
+                    light.Enabled = false;
+                }
+            }
+            else if (dayTime.TimeOfDay == TimeOfDay.Noon)
+            {
+                factor = 1 - factor / 2;
+                Sun.Colour = new Vector3(factor, factor, factor);
+            }
+            else if (dayTime.TimeOfDay == TimeOfDay.Evening)
+            {
+                factor = 0.5f - factor / 2;
+                Sun.Colour = new Vector3(factor, factor, factor);
+                foreach (var light in Lamps)
+                {
+                    light.Enabled = true;
+                }
+            }
         }
     }
 }

@@ -5,8 +5,15 @@ namespace Entities
     public class Light
     {
         public Vector3 Position { get; set; }
-        public Vector3 Colour { get; set; }
+
+        private Vector3 colour;
+        public Vector3 Colour
+        {
+            get => Enabled ? colour : new Vector3(0, 0, 0);
+            set => colour = value;
+        }
         public Vector3 Attenuation { get; set; } = new Vector3(1, 0, 0);
+        public bool Enabled { get; set; } = true;
 
         public Light(Vector3 position, Vector3 colour)
         {

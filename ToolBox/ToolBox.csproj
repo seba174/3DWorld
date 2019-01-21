@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DayTime.cs" />
     <Compile Include="FastBitmap.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Maths.cs" />
