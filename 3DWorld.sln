@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess3D", "Chess3D\Chess3D.csproj", "{5036C3C4-0CE3-441A-817C-903808919E87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DWorld", "Chess3D\3DWorld.csproj", "{5036C3C4-0CE3-441A-817C-903808919E87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderEngine", "RenderEngine\RenderEngine.csproj", "{6B3CFA40-5A54-48EF-9956-BC17351CD910}"
 EndProject

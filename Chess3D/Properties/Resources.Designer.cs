@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Chess3D.Properties
+namespace World3D.Properties
 {
 
 

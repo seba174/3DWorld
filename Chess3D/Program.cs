@@ -1,7 +1,6 @@
-﻿using OpenTK.Graphics.OpenGL4;
-using RenderEngine;
+﻿using RenderEngine;
 
-namespace Chess3D
+namespace World3D
 {
     internal static class Program
     {

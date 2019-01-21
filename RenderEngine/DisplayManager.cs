@@ -22,15 +22,14 @@ namespace RenderEngine
         private KeyboardHelper keyboard = new KeyboardHelper();
         private MouseHelper mouse = new MouseHelper();
         private ScreenHelper screen = new ScreenHelper();
-        private MousePicker mousePicker;
         private DayTime dayTime = new DayTime();
 
         private Loader loader = new Loader();
         private BaseCamera camera;
 
-        private List<Entity> entities;
-        private List<Terrain> terrains;
-        private List<Light> lights;
+        private List<Entity> entities = new List<Entity>();
+        private List<Terrain> terrains = new List<Terrain>();
+        private List<Light> lights = new List<Light>();
         private MasterRenderer renderer;
         private ShadingType shadingType = ShadingType.Phong;
         private Player player;
@@ -41,7 +40,7 @@ namespace RenderEngine
 
 
         public DisplayManager()
-            : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "Chess3D",
+            : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "My 3D world",
                   GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
         {
             screen = new ScreenHelper()
@@ -56,67 +55,20 @@ namespace RenderEngine
         {
             renderer = new MasterRenderer(screen, loader, shadingType);
 
-            TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy"));
-            TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud"));
-            TerrainTexture gTexture = new TerrainTexture(loader.InitTexture("grassFlowers"));
-            TerrainTexture bTexture = new TerrainTexture(loader.InitTexture("path"));
-            TerrainTexture blendMap = new TerrainTexture(loader.InitTexture("blendMap"));
-            TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+            lights.Add(new Light(new Vector3(0, 1000, 2000), new Vector3(0.2f, 0.2f, 0.2f)));
 
-            TexturedModel tree = loader.CreateTexturedModel("tree", "tree");
-            TexturedModel rock = loader.CreateTexturedModel("rock", "rock");
-            TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture");
-            TexturedModel lamp = loader.CreateTexturedModel("lamp", "lamp");
-
-            tree.Texture.ShineDampler = 10;
-            tree.Texture.Reflectivity = 1;
-
-            terrains = new List<Terrain>()
-            {
-                new Terrain(0, -1, loader, texturePack, blendMap, "heightMap"),
-                new Terrain(-1, -1, loader, texturePack, blendMap, "heightMap")
-            };
-
-            Random rdn = new Random();
-            entities = new List<Entity>();
-
-            lights = new List<Light>()
-            {
-                new Light(new Vector3(0, 1000, 2000), new Vector3(0.2f, 0.2f, 0.2f)),
-            };
-
-            for (int i = 0; i < 1000; i++)
-            {
-                float x = (float)rdn.NextDouble() * 800 - 400;
-                float z = (float)rdn.NextDouble() * -600;
-                float y = terrains.Where(t => t.IsOnTerrain(new Vector3(x, 0, z))).FirstOrDefault()?.GetHeight(x, z) ?? 0;
-
-                if (i % 100 == 0)
-                {
-                    CreateLamp(new Vector3(x, y, z), new Vector3(3.5f, 2, 2), lamp);
-                }
-                else if (i % 2 == 0)
-                {
-                    entities.Add(new Entity(tree, new Vector3(x, y, z), new Vector3(0, 0, 0), 3));
-                }
-                else
-                {
-                    if(i % 7 == 0)
-                    entities.Add(new Entity(rock,  new Vector3(x, y, z), new Vector3(0, 0, 0), 0.4f));
-                }
-            }
+            GenerateEntities();
 
             lights.Add(new Light(new Vector3(0), new Vector3(2, 2, 2), new Vector3(1, 0.01f, 0.002f))
             {
                 Angles = new Vector2((float)Math.Cos(MathHelper.DegreesToRadians(20)), (float)Math.Cos(MathHelper.DegreesToRadians(30)))
             });
 
+            TexturedModel playerModel = loader.CreateTexturedModel("player", "playerTexture");
             player = new Player(playerModel, new Vector3(0, 0, -50), new Vector3(0, 180, 0), 0.5f);
 
             camera = new Camera(keyboard, mouse);
             camera = new FirstPersonCamera(keyboard, mouse, player);
-
-            mousePicker = new MousePicker(renderer.ProjectionMatrix, mouse, screen);
 
             stopwatch.Start();
         }
@@ -132,10 +84,9 @@ namespace RenderEngine
 
             var terrainWherePlayerStands = terrains.Where(t => t.IsOnTerrain(player.Position)).FirstOrDefault();
             player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, dayTime.LastFrameTime);
+
             camera.Move();
             UpdateFlashLight();
-            //mousePicker.Update(camera);
-            //Console.WriteLine(mousePicker.CurrentRay);
 
             mouse.ResetDeltas();
         }
@@ -323,6 +274,64 @@ namespace RenderEngine
                 {
                     light.Enabled = true;
                 }
+            }
+        }
+
+        private Vector3 GenerateNextPosition(Random random)
+        {
+            float x = (float)random.NextDouble() * 800 - 400;
+            float z = (float)random.NextDouble() * -600;
+            float y = terrains.Where(t => t.IsOnTerrain(new Vector3(x, 0, z))).FirstOrDefault()?.GetHeight(x, z) ?? 0;
+            return new Vector3(x, y, z);
+        }
+
+        private void GenerateEntities()
+        {
+            TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy"));
+            TerrainTexture rTexture = new TerrainTexture(loader.InitTexture("mud"));
+            TerrainTexture gTexture = new TerrainTexture(loader.InitTexture("grassFlowers"));
+            TerrainTexture bTexture = new TerrainTexture(loader.InitTexture("path"));
+            TerrainTexture blendMap = new TerrainTexture(loader.InitTexture("blendMap"));
+            TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+
+            TexturedModel tree = loader.CreateTexturedModel("pine", "pine");
+            TexturedModel rock = loader.CreateTexturedModel("rock", "rock");
+            TexturedModel lamp = loader.CreateTexturedModel("lamp", "lamp");
+            TexturedModel eagle = loader.CreateTexturedModel("eagle", "eagle");
+
+            rock.Texture.HasTransparency = true;
+            tree.Texture.HasTransparency = true;
+
+            terrains = new List<Terrain>()
+            {
+                new Terrain(0, -1, loader, texturePack, blendMap, "heightMap"),
+                new Terrain(-1, -1, loader, texturePack, blendMap, "heightMap")
+            };
+
+            Random rdn = new Random();
+
+            for (int i = 0; i < 200; i++)
+            {
+                Vector3 pos = GenerateNextPosition(rdn);
+                entities.Add(new Entity(rock, pos, new Vector3(0, 0, 0), 0.4f));
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                Vector3 pos = GenerateNextPosition(rdn);
+                CreateLamp(pos, new Vector3(3.5f, 2, 2), lamp);
+            }
+
+            for (int i = 0; i < 1000; i++)
+            {
+                Vector3 pos = GenerateNextPosition(rdn);
+                entities.Add(new Entity(tree, pos, new Vector3(0, 0, 0), 0.6f));
+            }
+
+            for (int i = 0; i < 100; i++)
+            {
+                Vector3 pos = GenerateNextPosition(rdn) + new Vector3(0, 25 + (float)rdn.NextDouble() * 20, 0);
+                entities.Add(new Entity(eagle, pos, new Vector3(0, 0, 0), 4));
             }
         }
     }
