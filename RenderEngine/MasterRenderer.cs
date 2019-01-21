@@ -115,22 +115,25 @@ namespace RenderEngine
         {
             shader.CleanUp();
             terrainShader.CleanUp();
+            skyboxRenderer.CleanUp();
         }
 
         private void CreateProjectionMatrix()
         {
             float aspectRatio = width / (float)height;
-            float y_scale = (float)((1f / Math.Tan(MathHelper.DegreesToRadians(FOV / 2f))) * aspectRatio);
+            float y_scale = (float)(1f / Math.Tan(MathHelper.DegreesToRadians(FOV / 2f)) * aspectRatio);
             float x_scale = y_scale / aspectRatio;
             float frustum_lenght = FAR_PLANE - NEAR_PLANE;
 
-            projectionMatrix = new Matrix4();
-            projectionMatrix.M11 = x_scale;
-            projectionMatrix.M22 = y_scale;
-            projectionMatrix.M33 = -((FAR_PLANE + NEAR_PLANE) / frustum_lenght);
-            projectionMatrix.M34 = -1;
-            projectionMatrix.M43 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_lenght);
-            projectionMatrix.M44 = 0;
+            projectionMatrix = new Matrix4
+            {
+                M11 = x_scale,
+                M22 = y_scale,
+                M33 = -((FAR_PLANE + NEAR_PLANE) / frustum_lenght),
+                M34 = -1,
+                M43 = -(2 * NEAR_PLANE * FAR_PLANE / frustum_lenght),
+                M44 = 0
+            };
         }
     }
 }

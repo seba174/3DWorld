@@ -16,6 +16,9 @@ namespace Skybox
         private int location_projectionMatrix;
         private int location_viewMatrix;
         private int location_fogColour;
+        private int location_cubeMap;
+        private int location_cubeMap2;
+        private int location_blendFactor;
 
         private float rotation = 0;
 
@@ -34,6 +37,20 @@ namespace Skybox
             location_projectionMatrix = GetUniformLocation("projectionMatrix");
             location_viewMatrix = GetUniformLocation("viewMatrix");
             location_fogColour = GetUniformLocation("fogColour");
+            location_cubeMap = GetUniformLocation("cubeMap");
+            location_cubeMap2 = GetUniformLocation("cubeMap2");
+            location_blendFactor = GetUniformLocation("blendFactor");
+        }
+
+        public void ConnectTextureUnits()
+        {
+            LoadInt(location_cubeMap, 0);
+            LoadInt(location_cubeMap2, 1);
+        }
+
+        public void LoadBlendFactor(float blendFactor)
+        {
+            LoadFloat(location_blendFactor, blendFactor);
         }
 
         public void LoadFogColour(Vector3 fogColour)
