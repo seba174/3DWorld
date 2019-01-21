@@ -37,6 +37,25 @@ void main(void) {
 		float attenuationFactor = attenuation[i].x + attenuation[i].y * distance + attenuation[i].z * distance * distance;
 
 		vec3 unitLightVector = normalize(toLightVector[i]);
+
+		float outerConeAngle = 40.0;
+		float coneAngle = 30.0;
+		vec3 coneDirection = vec3(0.0, -1.0, 0.0);
+		float lightToSurfaceAngle = degrees(acos(dot(-unitLightVector, normalize(coneDirection))));
+		if (lightToSurfaceAngle > outerConeAngle && i > 0)
+		{
+			continue;
+		}
+		
+		float intensity = 1.0;
+		float eps = outerConeAngle - coneAngle;
+		if(lightToSurfaceAngle >= coneAngle)
+		{
+
+			intensity = clamp((lightToSurfaceAngle - outerConeAngle) / eps, 0.0, 1.0);
+		}
+
+
 		float nDot1 = dot(unitNormal, unitLightVector);
 		float brightness = max(nDot1, 0.0);
 		vec3 lightDirection = -unitLightVector;
@@ -45,8 +64,9 @@ void main(void) {
 		specularFactor = max(specularFactor, 0.0);
 		float dampedFactor = pow(specularFactor, shineDamper);
 
-		totalDiffuse = totalDiffuse + (brightness * lightColour[i]) / attenuationFactor;
-		totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColour[i]) / attenuationFactor;
+		totalDiffuse = totalDiffuse + intensity * ((brightness * lightColour[i]) / attenuationFactor);
+		totalSpecular = totalSpecular + intensity * ((dampedFactor * reflectivity * lightColour[i]) / attenuationFactor);
+
 	}
 
 	totalDiffuse = max(totalDiffuse, 0.2);

@@ -127,8 +127,8 @@ namespace RenderEngine
             var terrainWherePlayerStands = terrains.Where(t => t.IsOnTerrain(player.Position)).FirstOrDefault();
             player.Move(keyboard, (float x, float y) => terrainWherePlayerStands?.GetHeight(x, y) ?? 0, dayTime.LastFrameTime);
             camera.Move();
-            mousePicker.Update(camera);
-            Console.WriteLine(mousePicker.CurrentRay);
+            //mousePicker.Update(camera);
+            //Console.WriteLine(mousePicker.CurrentRay);
 
             mouse.ResetDeltas();
         }
