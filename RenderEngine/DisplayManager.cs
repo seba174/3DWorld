@@ -43,6 +43,7 @@ namespace RenderEngine
             : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "3D world",
                   GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
         {
+            CursorVisible = false;
             screen = new ScreenHelper()
             {
                 Width = Width,
@@ -132,6 +133,15 @@ namespace RenderEngine
         {
             switch (e.Key)
             {
+                case Key.Escape:
+                    Close();
+                    break;
+                case Key.F4:
+                    if (e.Keyboard.IsKeyDown(Key.AltLeft) || e.Keyboard.IsKeyDown(Key.AltRight))
+                    {
+                        Close();
+                    }
+                    break;
                 case Key.F:
                     FlashLight.Enabled = !FlashLight.Enabled;
                     Console.WriteLine($"Flashlight {(FlashLight.Enabled ? "enabled" : "disabled")}");

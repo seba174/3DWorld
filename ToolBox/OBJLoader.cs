@@ -15,7 +15,7 @@ namespace ToolBox
             var normals = new List<Vector3>();
             var indices = new List<int>();
 
-            using (var fr = new StreamReader(Constants.BaseObjFilesFolder + fileName + Constants.ObjFileExtension))
+            using (var fr = new StreamReader(Constants.BaseResourcesPath + fileName + Constants.ObjFileExtension))
             {
                 string line = null;
 
