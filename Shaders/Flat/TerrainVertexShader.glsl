@@ -5,7 +5,7 @@ in vec3 position;
 in vec2 textureCoordinates;
 in vec3 normal;
 
-flat out vec2 pass_textureCoordinates;
+out vec2 pass_textureCoordinates;
 flat out vec3 surfaceNormal;
 flat out vec3 toLightVector[NR_POINT_LIGHTS];
 flat out vec3 toCameraVector;

@@ -20,6 +20,10 @@ namespace Shaders
             {
                 Initialize(Constants.BaseFlatShaderFolder + Constants.TerrainVertexShader, Constants.BaseFlatShaderFolder + Constants.TerrainFragmentShader);
             }
+            else if (shadingType == ShadingType.Gouraud)
+            {
+                Initialize(Constants.BaseGouraudShaderFolder + Constants.TerrainVertexShader, Constants.BaseGouraudShaderFolder + Constants.TerrainFragmentShader);
+            }
         }
 
         protected override void BindAttributes()

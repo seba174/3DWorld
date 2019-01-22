@@ -1,7 +1,7 @@
 ﻿#version 450 core
 #define NR_POINT_LIGHTS 12
 
-flat in vec2 pass_textureCoordinates;
+in vec2 pass_textureCoordinates;
 flat in vec3 surfaceNormal;
 flat in vec3 toLightVector[NR_POINT_LIGHTS];
 flat in vec3 toCameraVector;

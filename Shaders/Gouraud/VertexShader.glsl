@@ -5,30 +5,25 @@ in vec3 position;
 in vec2 textureCoordinates;
 in vec3 normal;
 
+out vec2 pass_textureCoordinates;
+out vec3 totalDiffuse;
+out vec3 totalSpecular;
+out float visibility;
 
-out vec4 out_Color;
-
-
-
-uniform sampler2D textureSampler;
+uniform vec3 lightPosition[NR_POINT_LIGHTS];
 uniform vec3 lightColour[NR_POINT_LIGHTS];
 uniform vec3 attenuation[NR_POINT_LIGHTS];
 uniform vec3 coneDirection[NR_POINT_LIGHTS];
 uniform vec2 angle[NR_POINT_LIGHTS];
 uniform float shineDamper;
 uniform float reflectivity;
-uniform vec3 skyColour;
-
+uniform float useFakeLighting;
+uniform float numberOfRows;
+uniform vec2 offset;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition[NR_POINT_LIGHTS];
-
-uniform float useFakeLighting;
-
-uniform float numberOfRows;
-uniform vec2 offset;
 
 const float density = 0.0035;
 const float gradient = 4.0;
@@ -37,7 +32,7 @@ void main(void) {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCamera;
-	vec2 pass_textureCoordinates = (textureCoordinates / numberOfRows) + offset;
+	pass_textureCoordinates = (textureCoordinates / numberOfRows) + offset;
 
 	vec3 actualNormal = normal;
 	if (useFakeLighting > 0.5)
@@ -54,21 +49,14 @@ void main(void) {
 	vec3 toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 
 	float distance = length(positionRelativeToCamera.xyz);
-	float visibility = exp(-pow((distance * density), gradient));
+	visibility = exp(-pow((distance * density), gradient));
 	visibility = clamp(visibility, 0.0, 1.0);
 	
-		
-	vec4 textureColor = texture(textureSampler, pass_textureCoordinates);
-	if (textureColor.a < 0.5)
-	{
-		//discard;
-	}
-
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitToCameraVector = normalize(toCameraVector);
 
-	vec3 totalDiffuse = vec3(0.0);
-	vec3 totalSpecular = vec3(0.0);
+	totalDiffuse = vec3(0.0);
+	totalSpecular = vec3(0.0);
 
 	for (int i = 0; i < NR_POINT_LIGHTS; i++)
 	{
@@ -107,13 +95,7 @@ void main(void) {
 
 		totalDiffuse = totalDiffuse + intensity * ((brightness * lightColour[i]) / attenuationFactor);
 		totalSpecular = totalSpecular + intensity * ((dampedFactor * reflectivity * lightColour[i]) / attenuationFactor);
-
 	}
 
-	totalDiffuse = max(totalDiffuse, 0.2);
-
-	out_Color = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0);
-	out_Color = mix(vec4(skyColour, 1.0), out_Color, visibility);
-	
-	
+	totalDiffuse = max(totalDiffuse, 0.2);	
 }
