@@ -287,6 +287,11 @@ namespace RenderEngine
             return new Vector3(x, y, z);
         }
 
+        private Vector3 GenerateRandomRotation(Random random)
+        {
+            return new Vector3(0, (float)random.NextDouble() * 360, 0);
+        }
+
         private void GenerateEntities()
         {
             TerrainTexture backgroundTexture = new TerrainTexture(loader.InitTexture("grassy"));
@@ -318,7 +323,7 @@ namespace RenderEngine
             for (int i = 0; i < 200; i++)
             {
                 Vector3 pos = GenerateNextPosition(rdn);
-                entities.Add(new Entity(rock, pos, new Vector3(0, 0, 0), 0.4f));
+                entities.Add(new Entity(rock, pos, new Vector3(), 0.4f));
             }
 
             for (int i = 0; i < 10; i++)
@@ -330,13 +335,13 @@ namespace RenderEngine
             for (int i = 0; i < 1000; i++)
             {
                 Vector3 pos = GenerateNextPosition(rdn);
-                entities.Add(new Entity(tree, pos, new Vector3(0, 0, 0), 0.6f));
+                entities.Add(new Entity(tree, pos, GenerateRandomRotation(rdn), 0.6f));
             }
 
             for (int i = 0; i < 100; i++)
             {
                 Vector3 pos = GenerateNextPosition(rdn) + new Vector3(0, 25 + (float)rdn.NextDouble() * 20, 0);
-                entities.Add(new Entity(eagle, pos, new Vector3(0, 0, 0), 4));
+                entities.Add(new Entity(eagle, pos, GenerateRandomRotation(rdn), 4));
             }
 
             entities.Add(new Entity(sphere, new Vector3(0, 5, -200), new Vector3(), 4f));
