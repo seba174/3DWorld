@@ -40,7 +40,7 @@ namespace RenderEngine
 
 
         public DisplayManager()
-            : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "My 3D world",
+            : base(1600, 1000, new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 4), "3D world",
                   GameWindowFlags.Default, DisplayDevice.Default, 4, 0, GraphicsContextFlags.ForwardCompatible)
         {
             screen = new ScreenHelper()
@@ -300,8 +300,11 @@ namespace RenderEngine
             TexturedModel rock = loader.CreateTexturedModel("rock", "rock");
             TexturedModel lamp = loader.CreateTexturedModel("lamp", "lamp");
             TexturedModel eagle = loader.CreateTexturedModel("eagle", "eagle");
+            TexturedModel sphere = loader.CreateTexturedModel("sphere", "red");
 
-            rock.Texture.HasTransparency = true;
+            sphere.Texture.Reflectivity = 0.3f;
+            sphere.Texture.ShineDampler = 10;
+
             tree.Texture.HasTransparency = true;
 
             terrains = new List<Terrain>()
@@ -335,6 +338,8 @@ namespace RenderEngine
                 Vector3 pos = GenerateNextPosition(rdn) + new Vector3(0, 25 + (float)rdn.NextDouble() * 20, 0);
                 entities.Add(new Entity(eagle, pos, new Vector3(0, 0, 0), 4));
             }
+
+            entities.Add(new Entity(sphere, new Vector3(0, 5, -200), new Vector3(), 4f));
         }
     }
 }
