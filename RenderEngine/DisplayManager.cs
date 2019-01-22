@@ -139,6 +139,7 @@ namespace RenderEngine
                         if (camera is FirstPersonCamera)
                         {
                             camera = new ThirdPersonCamera(keyboard, mouse, player);
+                            Console.WriteLine("ThirdPersonCamera");
                         }
                         else if (camera is ThirdPersonCamera)
                         {
@@ -148,10 +149,12 @@ namespace RenderEngine
                                 Pitch = 40,
                                 Yaw = 180 - player.Rotation.Y
                             };
+                            Console.WriteLine("Still camera");
                         }
                         else
                         {
                             camera = new FirstPersonCamera(keyboard, mouse, player);
+                            Console.WriteLine("FirstPersonCamera");
                         }
                     }
                     break;
@@ -160,14 +163,17 @@ namespace RenderEngine
                         if (shadingType == ShadingType.Flat)
                         {
                             shadingType = ShadingType.Gouraud;
+                            Console.WriteLine("Gouraud");
                         }
                         else if (shadingType == ShadingType.Gouraud)
                         {
                             shadingType = ShadingType.Phong;
+                            Console.WriteLine("Phong");
                         }
                         else if (shadingType == ShadingType.Phong)
                         {
                             shadingType = ShadingType.Flat;
+                            Console.WriteLine("Flat");
                         }
                         renderer.CleanUp();
                         renderer = new MasterRenderer(screen, loader, shadingType);
@@ -344,7 +350,7 @@ namespace RenderEngine
                 entities.Add(new Entity(eagle, pos, GenerateRandomRotation(rdn), 4));
             }
 
-            entities.Add(new Entity(sphere, new Vector3(0, 5, -200), new Vector3(), 4f));
+            entities.Add(new Entity(sphere, new Vector3(0, 5, -150), new Vector3(), 4f));
         }
     }
 }
