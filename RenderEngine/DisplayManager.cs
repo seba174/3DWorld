@@ -133,13 +133,15 @@ namespace RenderEngine
             switch (e.Key)
             {
                 case Key.F:
-                    FlashLight.Enabled = !FlashLight.Enabled; break;
+                    FlashLight.Enabled = !FlashLight.Enabled;
+                    Console.WriteLine($"Flashlight {(FlashLight.Enabled ? "enabled" : "disabled")}");
+                    break;
                 case Key.C:
                     {
                         if (camera is FirstPersonCamera)
                         {
                             camera = new ThirdPersonCamera(keyboard, mouse, player);
-                            Console.WriteLine("ThirdPersonCamera");
+                            Console.WriteLine("Third person camera");
                         }
                         else if (camera is ThirdPersonCamera)
                         {
@@ -154,7 +156,7 @@ namespace RenderEngine
                         else
                         {
                             camera = new FirstPersonCamera(keyboard, mouse, player);
-                            Console.WriteLine("FirstPersonCamera");
+                            Console.WriteLine("First person camera");
                         }
                     }
                     break;
@@ -163,17 +165,17 @@ namespace RenderEngine
                         if (shadingType == ShadingType.Flat)
                         {
                             shadingType = ShadingType.Gouraud;
-                            Console.WriteLine("Gouraud");
+                            Console.WriteLine("Gouraud shading");
                         }
                         else if (shadingType == ShadingType.Gouraud)
                         {
                             shadingType = ShadingType.Phong;
-                            Console.WriteLine("Phong");
+                            Console.WriteLine("Phong shading");
                         }
                         else if (shadingType == ShadingType.Phong)
                         {
                             shadingType = ShadingType.Flat;
-                            Console.WriteLine("Flat");
+                            Console.WriteLine("Flat shading");
                         }
                         renderer.CleanUp();
                         renderer = new MasterRenderer(screen, loader, shadingType);
