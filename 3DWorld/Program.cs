@@ -1,4 +1,5 @@
-﻿using RenderEngine;
+﻿using System;
+using RenderEngine;
 
 namespace World3D
 {
@@ -6,7 +7,15 @@ namespace World3D
     {
         private static void Main()
         {
-            new DisplayManager().Run(120);
+            try
+            {
+                new DisplayManager().Run(120);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Something bad happened. Application must be closed.");
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }
