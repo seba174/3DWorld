@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using OpenTK;
@@ -8,6 +9,11 @@ namespace ToolBox
 {
     public class OBJLoader
     {
+        private static float ParseFloat(string f)
+        {
+            return float.Parse(f, CultureInfo.InvariantCulture);
+        }
+
         public static ModelData LoadObjModel(string fileName)
         {
             var vertices = new List<Vertex>();
@@ -29,23 +35,24 @@ namespace ToolBox
 
                     line = fr.ReadLine();
                     var splitedCurrentLine = line.Split(' ');
+
                     if (line.StartsWith("v "))
                     {
-                        Vector3 vertex = new Vector3(float.Parse(splitedCurrentLine[1]),
-                            float.Parse(splitedCurrentLine[2]), float.Parse(splitedCurrentLine[3]));
+                        Vector3 vertex = new Vector3(ParseFloat(splitedCurrentLine[1]),
+                            ParseFloat(splitedCurrentLine[2]), ParseFloat(splitedCurrentLine[3]));
 
                         Vertex newVertex = new Vertex(vertices.Count, vertex);
                         vertices.Add(newVertex);
                     }
                     else if (line.StartsWith("vt "))
                     {
-                        Vector2 texture = new Vector2(float.Parse(splitedCurrentLine[1]), float.Parse(splitedCurrentLine[2]));
+                        Vector2 texture = new Vector2(ParseFloat(splitedCurrentLine[1]), ParseFloat(splitedCurrentLine[2]));
                         textures.Add(texture);
                     }
                     else if (line.StartsWith("vn "))
                     {
-                        Vector3 normal = new Vector3(float.Parse(splitedCurrentLine[1]),
-                            float.Parse(splitedCurrentLine[2]), float.Parse(splitedCurrentLine[3]));
+                        Vector3 normal = new Vector3(ParseFloat(splitedCurrentLine[1]),
+                            ParseFloat(splitedCurrentLine[2]), ParseFloat(splitedCurrentLine[3]));
                         normals.Add(normal);
                     }
                 }
@@ -67,7 +74,6 @@ namespace ToolBox
                     }
                 }
             }
-
 
             RemoveUnusedVertices(vertices);
 
